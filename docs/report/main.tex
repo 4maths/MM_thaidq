@@ -1,0 +1,108 @@
+% ============================================================
+% BÁO CÁO BÀI TẬP LỚN ET3161 — Phân tích và Thiết kế Hệ thống Phần mềm
+% Hệ thống hỗ trợ Quy trình Quản lý Trang thiết bị QT.QLD.09.01
+% Biên dịch: xelatex main.tex (chạy 2 lần để cập nhật mục lục)
+% ============================================================
+\documentclass[12pt, a4paper]{report}
+
+\usepackage[margin=2.5cm, top=2.8cm, bottom=2.8cm]{geometry}
+\usepackage{fontspec}
+\usepackage{setspace}
+\usepackage{graphicx}
+\usepackage{booktabs}
+\usepackage{amssymb}
+\usepackage{longtable}
+\usepackage{array}
+\usepackage{xcolor}
+\usepackage{enumitem}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{caption}
+\usepackage[hidelinks, unicode]{hyperref}
+
+% ---- Font hỗ trợ tiếng Việt (có sẵn trên Windows) ----
+\setmainfont{Times New Roman}
+\setsansfont{Arial}
+
+\onehalfspacing
+\setlist{nosep, leftmargin=2em}
+
+% ---- Tiêu đề chương/section ----
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries\centering}{Chương \thechapter}{6pt}{\Large}
+\titlespacing*{\chapter}{0pt}{-10pt}{16pt}
+
+% ---- Header/footer ----
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\leftmark}
+\fancyhead[R]{\small Bài tập lớn ET3161}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.3pt}
+
+% ---- Bảng ----
+\renewcommand{\arraystretch}{1.25}
+\captionsetup{font=small, labelfont=bf}
+
+\newcolumntype{P}[1]{>{\raggedright\arraybackslash}p{#1}}
+
+% ---- Tiếng Việt hóa các nhãn mặc định ----
+\renewcommand{\contentsname}{Mục lục}
+\renewcommand{\listfigurename}{Danh mục hình}
+\renewcommand{\listtablename}{Danh mục bảng}
+\renewcommand{\chaptermark}[1]{\markboth{Chương \thechapter.\ #1}{}}
+
+\begin{document}
+
+% ================= TRANG BÌA =================
+\begin{titlepage}
+\centering
+{\Large \textbf{TRƯỜNG ĐẠI HỌC BÁCH KHOA HÀ NỘI}}\\[2pt]
+{\large Viện Công nghệ Thông tin và Truyền thông}\\[40pt]
+{\Huge\bfseries BÁO CÁO BÀI TẬP LỚN}\\[10pt]
+{\Large Môn: Phân tích và Thiết kế Hệ thống Phần mềm (ET3161)}\\[36pt]
+\begin{minipage}{0.86\textwidth}
+\centering
+{\Large\bfseries HỆ THỐNG HỖ TRỢ QUY TRÌNH\\ QUẢN LÝ TRANG THIẾT BỊ (QT.QLD.09.01)\\[6pt]
+CỤC QUẢN LÝ DƯỢC — BỘ Y TẾ}\\[14pt]
+{\large Số hóa biểu mẫu BM.QLD.09.01/01 $\rightarrow$ /04\\ theo chuẩn UML và cài đặt thử nghiệm}
+\end{minipage}\\[60pt]
+\begin{flushright}
+\begin{tabular}{ll}
+\textbf{Sinh viên thực hiện:} & \\[4pt]
+Họ và tên: & \underline{\hspace{6cm}} \\[8pt]
+MSSV: & \underline{\hspace{6cm}} \\[8pt]
+Lớp: & \underline{\hspace{6cm}} \\[8pt]
+Giảng viên hướng dẫn: & \underline{\hspace{6cm}} \\
+\end{tabular}
+\end{flushright}
+\vfill
+{\large Hà Nội --- 2026}
+\end{titlepage}
+
+% ================= MỤC LỤC =================
+\tableofcontents
+\listoffigures
+\listoftables
+
+% ================= CÁC CHƯƠNG =================
+\input{chapters/ch01-gioi-thieu}
+\input{chapters/ch02-khao-sat-yeu-cau}
+\input{chapters/ch03-mo-hinh-chuc-nang}
+\input{chapters/ch04-mo-hinh-cau-truc}
+\input{chapters/ch05-mo-hinh-hanh-vi}
+\input{chapters/ch06-thiet-ke-he-thong}
+\input{chapters/ch07-cai-dat-thu-nghiem}
+\input{chapters/ch08-ket-luan}
+\input{chapters/appendix}
+
+% ================= TÀI LIỆU THAM KHẢO =================
+\begin{thebibliography}{9}
+\bibitem{qtd} Cục Quản lý Dược — Bộ Y tế, \textit{Quy trình quản lý trang thiết bị, QT.QLD.09.01, Lần ban hành 01}, Hà Nội, 07/8/2018.
+\bibitem{iso} TCVN ISO 9001:2015, \textit{Hệ thống quản lý chất lượng — Các yêu cầu}.
+\bibitem{iconix} D. Rosenberg, M. Stephens, \textit{Use Case Driven Object Modeling with UML: Theory and Practice}, Apress, 2007.
+\bibitem{dennis} A. Dennis, B. H. Wixom, D. Tegarden, \textit{Systems Analysis and Design: An Object-Oriented Approach with UML}, 4th ed., Wiley, 2012.
+\bibitem{fowler} M. Fowler, \textit{UML Distilled: A Brief Guide to the Standard Object Modeling Language}, 3rd ed., Addison-Wesley, 2003.
+\end{thebibliography}
+
+\end{document}

@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo sự cố — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .form-card { max-width: 640px; margin: 0 auto; background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09); border-radius: 16px; padding: 28px; }
+    .field { margin-bottom: 18px; }
+    .field label { display: block; font-size: 13.5px; margin-bottom: 6px; opacity: .85; }
+    .field input, .field select, .field textarea {
+      width: 100%; padding: 11px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,.14);
+      background: rgba(255,255,255,.05); color: inherit; font: inherit;
+    }
+    .field textarea { min-height: 120px; resize: vertical; }
+    .field input:focus, .field select:focus, .field textarea:focus { outline: 2px solid #AE8D3C; border-color: transparent; }
+    .form-note { font-size: 13px; opacity: .65; margin-top: 8px; }
+    .form-success { color: #7fd4a2; margin-top: 14px; display: none; }
+    .form-error { color: #ff9c9c; margin-top: 14px; display: none; }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <nav class="topbar__links"><a href="index.html">Quy trình QT.QLD.09.01 — mục 6.2.3b</a></nav>
+      <div class="topbar__lang"><span style="opacity:.7">Báo sự cố / nguy cơ sự cố</span></div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html">
+        <svg class="brand__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <circle cx="24" cy="24" r="21" stroke="currentColor" stroke-width="2"/>
+          <path d="M15 33 24 12l9 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18.5 26h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand__text">
+          <span class="brand__name">QUẢN LÝ TRANG THIẾT BỊ</span>
+          <span class="brand__org">Cục Quản lý Dược · Bộ Y tế</span>
+        </span>
+      </a>
+      <nav class="main-nav" aria-label="Menu chính">
+        <a href="index.html">Trang chủ</a>
+        <a href="thiet-bi.html">Tra cứu thiết bị</a>
+        <a href="bao-su-co.html" class="is-active">Báo sự cố</a>
+        <a href="su-co-cua-toi.html">Sự cố của đơn vị</a>
+        <a href="ke-hoach.html">Kế hoạch bảo dưỡng</a>
+      </nav>
+      <div class="header-actions">
+        <a class="login-link" href="dang-nhap.html" data-role="login-link">Đăng nhập</a>
+        <button class="nav-toggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container page-head">
+      <nav class="breadcrumb" aria-label="Vị trí trang">
+        <a href="index.html">Trang chủ</a><span>/</span>Báo sự cố
+      </nav>
+      <h1>Báo sự cố trang thiết bị</h1>
+      <p class="page-head__desc">Trong quá trình sử dụng, thiết bị có sự cố hoặc nguy cơ sự cố — đơn vị thông báo cho Văn phòng Cục tại đây.</p>
+    </div>
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="form-card">
+          <form id="incident-form" novalidate>
+            <div class="field">
+              <label for="equipment">Trang thiết bị *</label>
+              <select id="equipment" required>
+                <option value="">— Chọn thiết bị —</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="severity">Mức độ (ước lượng của đơn vị)</label>
+              <select id="severity">
+                <option value="NHO">Sự cố nhỏ — có thể tự khắc phục</option>
+                <option value="NGUY_CO">Nguy cơ sự cố tiềm tàng</option>
+                <option value="LON">Sự cố lớn — không tự xử lý được</option>
+              </select>
+              <p class="form-note">Văn phòng Cục sẽ xem xét, xác định nguyên nhân và phân loại xử lý chính thức.</p>
+            </div>
+            <div class="field">
+              <label for="description">Mô tả sự cố *</label>
+              <textarea id="description" required placeholder="Hiện tượng, thời điểm phát hiện, ảnh hưởng tới công việc…"></textarea>
+            </div>
+            <button class="btn-gold" type="submit" style="width:100%; padding:12px;">Gửi báo sự cố</button>
+            <p class="form-success" id="ok"></p>
+            <p class="form-error" id="err"></p>
+          </form>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>© <span data-role="year">2026</span> Cục Quản lý Dược – Bộ Y tế.</span>
+      <span>QT.QLD.09.01</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/api.js?v=2"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    const sel = document.getElementById('equipment');
+
+    async function loadEquipment() {
+      try {
+        const res = await API.get('/equipment?pageSize=100');
+        sel.innerHTML = '<option value="">— Chọn thiết bị —</option>' +
+          res.data.map((e) => `<option value="${e.id}">${e.code} — ${e.name} (${e.department_name || ''})</option>`).join('');
+      } catch (err) {
+        sel.innerHTML = `<option value="">${err.message} — cần đăng nhập</option>`;
+      }
+    }
+
+    document.getElementById('incident-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const ok = document.getElementById('ok'), err = document.getElementById('err');
+      ok.style.display = err.style.display = 'none';
+      if (!sel.value) {
+        err.textContent = 'Vui lòng chọn thiết bị.';
+        err.style.display = 'block';
+        return;
+      }
+      try {
+        const res = await API.post('/incidents', {
+          equipmentId: Number(sel.value),
+          severity: document.getElementById('severity').value,
+          description: document.getElementById('description').value.trim(),
+        });
+        ok.innerHTML = `Đã gửi báo sự cố <strong>${res.incident.code}</strong>. Văn phòng Cục sẽ xem xét và phân loại xử lý.`;
+        ok.style.display = 'block';
+        e.target.reset();
+      } catch (ex) {
+        err.textContent = ex.message;
+        err.style.display = 'block';
+      }
+    });
+
+    if (requireLogin()) loadEquipment();
+  </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+name: qltt
+
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-qltt}
+      POSTGRES_USER: ${POSTGRES_USER:-qltt}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-qltt_secret}
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-qltt} -d ${POSTGRES_DB:-qltt}"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    restart: unless-stopped
+
+  api:
+    build: ./backend
+    environment:
+      PORT: 3000
+      PGHOST: db
+      PGPORT: 5432
+      PGDATABASE: ${POSTGRES_DB:-qltt}
+      PGUSER: ${POSTGRES_USER:-qltt}
+      PGPASSWORD: ${POSTGRES_PASSWORD:-qltt_secret}
+      JWT_SECRET: ${JWT_SECRET:-doi-thanh-chuoi-bat-ki-dai-32-ky-tu}
+      JWT_EXPIRES: 8h
+      UPLOAD_DIR: /app/uploads
+    volumes:
+      - uploads:/app/uploads
+    ports:
+      - "3001:3000"   # truy cập API trực tiếp (dev/tools); production có thể bỏ
+    depends_on:
+      db:
+        condition: service_healthy
+    restart: unless-stopped
+
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"     # cổng cho đơn vị sử dụng
+    depends_on:
+      - api
+    restart: unless-stopped
+
+  frontend-admin:
+    build: ./frontend-admin
+    ports:
+      - "8081:80"     # cổng cho Văn phòng Cục / Lãnh đạo / QMS
+    depends_on:
+      - api
+    restart: unless-stopped
+
+volumes:
+  pgdata:
+  uploads:

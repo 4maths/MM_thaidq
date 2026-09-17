@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Trang chủ — Hệ thống Quản lý Trang thiết bị · Cục Quản lý Dược</title>
+  <meta name="description" content="Hệ thống quản lý trang thiết bị của Cục Quản lý Dược — số hóa quy trình QT.QLD.09.01: danh mục, hồ sơ, sự cố, kế hoạch bảo dưỡng và nghiệm thu.">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+
+  <!-- ===== Thanh tiện ích trên cùng ===== -->
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <nav class="topbar__links" aria-label="Liên kết hệ thống">
+        <a href="#">Quy trình QT.QLD.09.01</a>
+        <a href="#">Ban QMS — Hệ thống quản lý chất lượng</a>
+      </nav>
+      <div class="topbar__lang">
+        <span style="opacity:.7">ISO 9001:2015</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== Header chính ===== -->
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html" aria-label="Trang chủ Hệ thống quản lý trang thiết bị">
+        <svg class="brand__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <circle cx="24" cy="24" r="21" stroke="currentColor" stroke-width="2"/>
+          <path d="M15 33 24 12l9 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18.5 26h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand__text">
+          <span class="brand__name">QUẢN LÝ TRANG THIẾT BỊ</span>
+          <span class="brand__org">Cục Quản lý Dược · Bộ Y tế</span>
+        </span>
+      </a>
+
+      <nav class="main-nav" aria-label="Menu chính">
+        <a href="index.html" class="is-active">Trang chủ</a>
+        <a href="thiet-bi.html">Tra cứu thiết bị</a>
+        <a href="bao-su-co.html">Báo sự cố</a>
+        <a href="su-co-cua-toi.html">Sự cố của đơn vị</a>
+        <a href="ke-hoach.html">Kế hoạch bảo dưỡng</a>
+      </nav>
+
+      <div class="header-actions">
+        <a class="login-link" href="dang-nhap.html" data-role="login-link">Đăng nhập</a>
+        <button class="nav-toggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <!-- ===== Hero ===== -->
+    <section class="hero">
+      <div class="hero__arcs" aria-hidden="true">
+        <span class="arc-1"></span><span class="arc-2"></span><span class="arc-3"></span>
+        <span class="line-v"></span><span class="line-h"></span>
+      </div>
+      <div class="container hero__inner">
+        <p class="hero__eyebrow">Hệ thống điện tử · QT.QLD.09.01</p>
+        <h1 class="hero__title">Duy trì hoạt động ổn định, liên tục của trang thiết bị</h1>
+        <div class="hero__cta">
+          <a class="btn-gold" href="bao-su-co.html">Báo sự cố ngay</a>
+          <a class="link-arrow" href="thiet-bi.html">Tra cứu danh mục &amp; hồ sơ thiết bị</a>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Tra cứu nhanh ===== -->
+    <section class="section">
+      <div class="container search-zone">
+        <div class="az-index">
+          <p class="label">Danh mục theo đơn vị</p>
+          <nav class="az-grid" aria-label="Truy cập nhanh">
+            <a class="chip" href="thiet-bi.html?status=HOAT_DONG">Đang hoạt động</a>
+            <a class="chip" href="thiet-bi.html?status=SU_CO">Đang có sự cố</a>
+            <a class="chip" href="thiet-bi.html?status=DANG_SUA">Đang sửa chữa</a>
+            <a class="chip" href="thiet-bi.html?status=NGUNG_SU_DUNG">Ngừng sử dụng</a>
+          </nav>
+        </div>
+        <div class="search-panel__box">
+          <h2>Tra cứu nhanh</h2>
+          <p>Nhập tên hoặc mã số trang thiết bị để xem thông tin và hồ sơ.</p>
+          <form class="search-input" action="thiet-bi.html" method="get" role="search">
+            <input type="search" name="q" placeholder="Ví dụ: Máy photocopy, TT-2021-001…"
+                   aria-label="Nhập tên hoặc mã thiết bị">
+            <button class="btn-gold" type="submit">Tìm</button>
+          </form>
+          <div class="search-chips">
+            <a class="chip" href="bao-su-co.html">Báo sự cố</a>
+            <a class="chip" href="ke-hoach.html">Kế hoạch năm</a>
+            <a class="chip" href="su-co-cua-toi.html">Theo dõi sự cố</a>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Dịch vụ & thông tin nổi bật ===== -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="heading-ghost">Nghiệp vụ chính</h2>
+          <p class="section-head__desc">Số hóa 4 biểu mẫu giấy của quy trình QT.QLD.09.01 (BM.QLD.09.01/01 → /04).</p>
+        </div>
+        <div class="grid-3">
+          <article class="svc-card">
+            <span class="svc-card__num">01</span>
+            <h3 class="svc-card__title">Danh mục &amp; hồ sơ thiết bị</h3>
+            <p class="svc-card__desc">Danh mục toàn Cục (BM/01) và hồ sơ từng thiết bị: lịch sử bảo trì, sửa chữa, thay thế — truy vết đầy đủ (BM/02).</p>
+            <a class="link-arrow" href="thiet-bi.html">Tra cứu</a>
+          </article>
+          <article class="svc-card">
+            <span class="svc-card__num">02</span>
+            <h3 class="svc-card__title">Báo &amp; xử lý sự cố</h3>
+            <p class="svc-card__desc">Báo sự cố trực tuyến; sự cố nhỏ đơn vị tự khắc phục, sự cố lớn lập phương án và trình Lãnh đạo Cục phê duyệt.</p>
+            <a class="link-arrow" href="bao-su-co.html">Báo sự cố</a>
+          </article>
+          <article class="svc-card">
+            <span class="svc-card__num">03</span>
+            <h3 class="svc-card__title">Kế hoạch &amp; nghiệm thu</h3>
+            <p class="svc-card__desc">Kế hoạch bảo dưỡng, thay thế hàng năm (BM/03) với nhắc lịch tự động; biên bản nghiệm thu điện tử (BM/04).</p>
+            <a class="link-arrow" href="ke-hoach.html">Xem kế hoạch</a>
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- ===== Quy trình 3 bước ===== -->
+    <section class="section">
+      <div class="container">
+        <div class="section-head">
+          <h2 class="heading-ghost">Quy trình xử lý sự cố</h2>
+          <p class="section-head__desc">Theo đúng lưu đồ mục 6.2.3b của quy trình — sự cố nhỏ không cần chờ phê duyệt.</p>
+        </div>
+        <div class="grid-3">
+          <article class="svc-card">
+            <span class="svc-card__num">Bước 1</span>
+            <h3 class="svc-card__title">Thông báo sự cố</h3>
+            <p class="svc-card__desc">Đơn vị sử dụng báo sự cố hoặc nguy cơ sự cố cho Văn phòng Cục ngay trên hệ thống.</p>
+          </article>
+          <article class="svc-card">
+            <span class="svc-card__num">Bước 2</span>
+            <h3 class="svc-card__title">Xem xét, phân loại</h3>
+            <p class="svc-card__desc">Văn phòng Cục kiểm tra nguyên nhân: sự cố nhỏ → đơn vị tự khắc phục; lớn → lập phương án, trình duyệt.</p>
+          </article>
+          <article class="svc-card">
+            <span class="svc-card__num">Bước 3</span>
+            <h3 class="svc-card__title">Thực hiện &amp; nghiệm thu</h3>
+            <p class="svc-card__desc">Sửa chữa, kiểm tra chạy thử, lập biên bản nghiệm thu khi thuê ngoài và cập nhật hồ sơ thiết bị.</p>
+          </article>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <!-- ===== Footer ===== -->
+  <footer class="site-footer">
+    <div class="container">
+      <div class="footer-grid">
+        <div class="footer-brand">
+          <p class="footer-brand__name">CỤC QUẢN LÝ DƯỢC</p>
+          <p>138A Giảng Võ, Ba Đình, Hà Nội</p>
+          <p>Hệ thống Quản lý Trang thiết bị — QT.QLD.09.01</p>
+        </div>
+        <div class="footer-col">
+          <h4>Nghiệp vụ</h4>
+          <ul>
+            <li><a href="thiet-bi.html">Danh mục thiết bị</a></li>
+            <li><a href="bao-su-co.html">Báo sự cố</a></li>
+            <li><a href="ke-hoach.html">Kế hoạch bảo dưỡng</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Vai trò</h4>
+          <ul>
+            <li><a href="dang-nhap.html">Đơn vị sử dụng</a></li>
+            <li><a href="dang-nhap.html">Văn phòng Cục</a></li>
+            <li><a href="dang-nhap.html">Lãnh đạo Cục · Ban QMS</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Tài liệu</h4>
+          <ul>
+            <li><a href="#">Quy trình QT.QLD.09.01</a></li>
+            <li><a href="#">Biểu mẫu BM/01 → BM/04</a></li>
+            <li><a href="#">Hướng dẫn sử dụng</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="footer-bottom">
+        <span>© <span data-role="year">2026</span> Cục Quản lý Dược – Bộ Y tế.</span>
+        <span>Bài tập lớn ET3161 — Phân tích và thiết kế hệ thống phần mềm</span>
+      </div>
+    </div>
+  </footer>
+
+  <script src="assets/js/api.js?v=2"></script>
+  <script src="assets/js/main.js"></script>
+</body>
+</html>

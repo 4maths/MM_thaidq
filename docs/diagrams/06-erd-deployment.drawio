@@ -1,0 +1,192 @@
+<mxfile host="app.diagrams.net" modified="2026-09-16T00:00:00.000Z" agent="ET3161-BTL" version="24.0.0">
+  <diagram id="erd" name="9. ERD - Cơ sở dữ liệu">
+    <mxGraphModel dx="1900" dy="1250" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1800" pageHeight="1250" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="e_dept" value="departments" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#DAE8FC;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="230" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_dept_a" value="PK id&#10;   code, name" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_dept">
+          <mxGeometry y="24" width="230" height="66" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_users" value="users" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#DAE8FC;" vertex="1" parent="1">
+          <mxGeometry x="330" y="40" width="230" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_users_a" value="PK id&#10;   username, password_hash, full_name&#10;FK role_id → roles&#10;FK department_id → departments&#10;   is_active" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_users">
+          <mxGeometry y="24" width="230" height="96" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_roles" value="roles" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#DAE8FC;" vertex="1" parent="1">
+          <mxGeometry x="620" y="40" width="230" height="90" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_roles_a" value="PK id&#10;   code, name" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_roles">
+          <mxGeometry y="24" width="230" height="66" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_noti" value="notifications" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#F5F5F5;" vertex="1" parent="1">
+          <mxGeometry x="910" y="40" width="230" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_noti_a" value="PK id&#10;   title, body, type, link, is_read&#10;FK user_id → users" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_noti">
+          <mxGeometry y="24" width="230" height="96" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_audit" value="audit_logs (append-only)" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#F5F5F5;" vertex="1" parent="1">
+          <mxGeometry x="1200" y="40" width="260" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_audit_a" value="PK id&#10;   action, entity_type, entity_id&#10;   old_values / new_values (JSONB)&#10;FK user_id → users" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_audit">
+          <mxGeometry y="24" width="260" height="96" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_equip" value="equipment (BM/01)" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#FFF2CC;" vertex="1" parent="1">
+          <mxGeometry x="180" y="330" width="250" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_equip_a" value="PK id&#10;   code, name&#10;   country_of_origin, received_date&#10;   status, category, model&#10;FK department_id → departments" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_equip">
+          <mxGeometry y="24" width="250" height="126" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_log" value="equipment_logs (BM/02)" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#FFF2CC;" vertex="1" parent="1">
+          <mxGeometry x="510" y="330" width="250" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_log_a" value="PK id&#10;   performed_date, content&#10;   performer, log_type&#10;FK equipment_id → equipment&#10;FK related_incident_id → incidents&#10;FK related_plan_item_id → plan_items" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_log">
+          <mxGeometry y="24" width="250" height="126" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_plan" value="maintenance_plans (BM/03)" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#FFF2CC;" vertex="1" parent="1">
+          <mxGeometry x="840" y="330" width="250" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_plan_a" value="PK id&#10;   year (1 bản / năm), status&#10;FK approved_by → users" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_plan">
+          <mxGeometry y="24" width="250" height="96" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_vendor" value="vendors" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#F5F5F5;" vertex="1" parent="1">
+          <mxGeometry x="1170" y="330" width="230" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_vendor_a" value="PK id&#10;   name, tax_code, address&#10;   contact_person" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_vendor">
+          <mxGeometry y="24" width="230" height="96" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_attach" value="attachments" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#F5F5F5;" vertex="1" parent="1">
+          <mxGeometry x="1480" y="330" width="250" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_attach_a" value="PK id&#10;   file_name, file_path, mime_type&#10;   entity_type + entity_id (polymorphic)" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_attach">
+          <mxGeometry y="24" width="250" height="96" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_item" value="maintenance_plan_items" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#FFF2CC;" vertex="1" parent="1">
+          <mxGeometry x="680" y="640" width="260" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_item_a" value="PK id&#10;   content, executor_type&#10;   planned_month (1–12), notes&#10;   estimated_cost, priority, status&#10;FK plan_id → maintenance_plans&#10;FK equipment_id → equipment" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_item">
+          <mxGeometry y="24" width="260" height="126" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_inc" value="incidents" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#D5E8D4;" vertex="1" parent="1">
+          <mxGeometry x="1020" y="640" width="250" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_inc_a" value="PK id&#10;   code, description&#10;   severity, resolution_type, status&#10;   reported_at, reviewed_at, resolved_at&#10;FK equipment_id → equipment&#10;FK reported_by, reviewed_by → users" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_inc">
+          <mxGeometry y="24" width="250" height="126" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_repair" value="repair_plans" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#D5E8D4;" vertex="1" parent="1">
+          <mxGeometry x="1350" y="640" width="250" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_repair_a" value="PK id&#10;   content, estimated_cost, status&#10;FK incident_id → incidents (1–0..1)&#10;FK vendor_id → vendors&#10;FK approved_by → users" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_repair">
+          <mxGeometry y="24" width="250" height="126" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_acc" value="acceptance_records (BM/04)" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#E1D5E7;" vertex="1" parent="1">
+          <mxGeometry x="920" y="960" width="270" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_acc_a" value="PK id&#10;   code, work_done&#10;   equipment_condition_after&#10;   accepted_date, copies_count = 2&#10;FK incident_id / repair_plan_id&#10;FK plan_item_id, equipment_id, created_by" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_acc">
+          <mxGeometry y="24" width="270" height="126" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="e_rep" value="acceptance_representatives" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#666666;startSize=24;fillColor=#E1D5E7;" vertex="1" parent="1">
+          <mxGeometry x="1280" y="960" width="270" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="e_rep_a" value="PK id&#10;   side (A | B), full_name, organization&#10;   signed, signed_at&#10;FK acceptance_id → acceptance_records" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="e_rep">
+          <mxGeometry y="24" width="270" height="96" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="r_du" style="edgeStyle=entityRelationEdgeStyle;html=1;endArrow=ERmany;startArrow=ERone;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="e_dept" target="e_equip"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r_ru" style="edgeStyle=entityRelationEdgeStyle;html=1;endArrow=ERmany;startArrow=ERone;fontSize=11;" edge="1" parent="1" source="e_roles" target="e_users"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r_un" style="edgeStyle=entityRelationEdgeStyle;html=1;endArrow=ERmany;startArrow=ERone;fontSize=11;" edge="1" parent="1" source="e_users" target="e_noti"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r_ua" style="edgeStyle=entityRelationEdgeStyle;html=1;endArrow=ERmany;startArrow=ERzeroOrOne;fontSize=11;" edge="1" parent="1" source="e_users" target="e_audit"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r_el" style="edgeStyle=entityRelationEdgeStyle;html=1;endArrow=ERmany;startArrow=ERone;fontSize=11;" edge="1" parent="1" source="e_equip" target="e_log"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r_pi" style="edgeStyle=entityRelationEdgeStyle;html=1;endArrow=ERmany;startArrow=ERone;fontSize=11;exitX=0.5;exitY=1;entryX=0;entryY=0.5;" edge="1" parent="1" source="e_equip" target="e_item"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r_pl" style="edgeStyle=entityRelationEdgeStyle;html=1;endArrow=ERmany;startArrow=ERone;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="e_plan" target="e_item"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r_ie" style="edgeStyle=entityRelationEdgeStyle;html=1;endArrow=ERmany;startArrow=ERone;fontSize=11;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="e_inc" target="e_equip"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r_ir" style="edgeStyle=entityRelationEdgeStyle;html=1;endArrow=ERzeroOrOne;startArrow=ERone;fontSize=11;" edge="1" parent="1" source="e_inc" target="e_repair"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r_rv" style="edgeStyle=entityRelationEdgeStyle;html=1;endArrow=ERmany;startArrow=ERzeroOrOne;fontSize=11;exitX=1;exitY=0.25;entryX=0.5;entryY=1;" edge="1" parent="1" source="e_repair" target="e_vendor"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r_ar" style="edgeStyle=entityRelationEdgeStyle;html=1;endArrow=ERzeroOrOne;startArrow=ERone;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="e_repair" target="e_acc"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r_arep" style="edgeStyle=entityRelationEdgeStyle;html=1;endArrow=ERmany;startArrow=ERone;fontSize=11;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="e_acc" target="e_rep"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="erdnote" value="Ghi chú:&#10;— (BM/0x) = bảng lưu trữ biểu mẫu giấy tương ứng trong quy trình&#10;— attachments là bảng đa hình: đính kèm được cho equipment / incident / acceptance / plan&#10;— equipment_logs là «đơn vị lưu trữ» hồ sơ thiết bị — dữ liệu chỉ thêm, không sửa/xóa (traceability)" style="shape=note;whiteSpace=wrap;html=1;size=16;verticalAlign=top;align=left;spacingLeft=8;fontSize=11;fillColor=#FFF9E6;" vertex="1" parent="1">
+          <mxGeometry x="40" y="960" width="520" height="110" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram id="deployment" name="10. Deployment">
+    <mxGraphModel dx="1200" dy="800" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1250" pageHeight="720" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="dtitle" value="Sơ đồ triển khai — kiến trúc 3 lớp (Docker Compose)" style="text;html=1;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="300" y="10" width="600" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="n_user" value="«device»&#10;Trình duyệt (Desktop / Mobile)" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;verticalAlign=top;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="70" width="230" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_user" value="«artifact» frontend/&#10;cổng cho đơn vị sử dụng" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="75" y="135" width="180" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="n_admin" value="«device»&#10;Trình duyệt cán bộ Cục" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;verticalAlign=top;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="50" y="300" width="230" height="170" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_admin" value="«artifact» frontend-admin/&#10;Văn phòng Cục · Lãnh đạo · QMS" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="65" y="365" width="200" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="n_proxy" value="«execution environment»&#10;Server chủ quản — Nginx (reverse proxy)" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;verticalAlign=top;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="180" width="250" height="190" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_proxy" value="«artifact» nginx.conf&#10;TLS termination · static files&#10;proxy_pass /api → api:3000" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="445" y="255" width="220" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="n_api" value="«execution environment»&#10;Node.js 20 + Express (container api)" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;verticalAlign=top;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="800" y="120" width="260" height="200" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_api" value="«artifact» qltt-api (app.js)&#10;REST API /api/v1 · JWT auth&#10;workflows · notifications · audit" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="815" y="190" width="230" height="60" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="n_db" value="«execution environment»&#10;PostgreSQL 16 (container db)" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;verticalAlign=top;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="800" y="400" width="260" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_db" value="«artifact» 15 bảng&#10;volume: pgdata" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="830" y="470" width="200" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="n_fs" value="«execution environment»&#10;File storage (volume uploads)" style="shape=cube;whiteSpace=wrap;html=1;boundedLbl=1;backgroundOutline=1;darkOpacity=0.05;verticalAlign=top;fontSize=12;fontStyle=1;" vertex="1" parent="1">
+          <mxGeometry x="430" y="460" width="250" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="a_fs" value="«artifact» biên bản, hóa đơn, ảnh sự cố" style="rounded=0;whiteSpace=wrap;html=1;fontSize=11;" vertex="1" parent="1">
+          <mxGeometry x="445" y="525" width="220" height="40" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="d1" value="HTTPS / REST JSON" style="html=1;endArrow=block;startArrow=block;fontSize=11;exitX=1;exitY=0.5;entryX=0;entryY=0.35;" edge="1" parent="1" source="n_user" target="n_proxy"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d2" value="HTTPS / REST JSON" style="html=1;endArrow=block;startArrow=block;fontSize=11;exitX=1;exitY=0.5;entryX=0;entryY=0.7;" edge="1" parent="1" source="n_admin" target="n_proxy"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d3" value="HTTP proxy_pass :3000" style="html=1;endArrow=block;startArrow=block;fontSize=11;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="n_proxy" target="n_api"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d4" value="TCP :5432 — SQL" style="html=1;endArrow=block;startArrow=block;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_api" target="n_db"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="d5" value="ghi / đọc file đính kèm" style="html=1;endArrow=block;startArrow=block;fontSize=11;exitX=0.25;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="n_api" target="n_fs"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

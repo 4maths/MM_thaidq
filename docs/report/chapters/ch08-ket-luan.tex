@@ -1,0 +1,43 @@
+\chapter{Kết luận và hướng phát triển}
+
+\section{Kết quả đạt được}
+
+So với mục tiêu đặt ra ở Chương 1, hệ thống đã đáp ứng:
+
+\begin{table}[h]
+\centering
+\caption{Đối chiếu mục tiêu --- kết quả}
+\label{tab:goals}
+\begin{tabular}{P{0.8cm}P{7.4cm}P{6.6cm}}
+\toprule
+\textbf{TT} & \textbf{Mục tiêu} & \textbf{Kết quả} \\
+\midrule
+1 & Số hóa 4 biểu mẫu BM/01--/04 & 15 bảng CSDL bám đúng trường dữ liệu nguyên văn; giao diện tái hiện cột biểu mẫu; xuất Excel BM/01 \\
+2 & Tự động hóa luồng phê duyệt & State machine Kế hoạch/Phương án: trình $\rightarrow$ duyệt/từ chối kèm lý do; thông báo tự động theo vai trò \\
+3 & Cảnh báo, nhắc lịch & Job 07:00 hằng ngày nhắc hạng mục tháng hiện tại chưa hoàn thành \\
+4 & Truy vết lịch sử thiết bị & Timeline hồ sơ BM/02 tự ghi từ mọi luồng; audit trail append-only \\
+5 & Báo cáo cho QMS, Lãnh đạo & 5 báo cáo: tổng quan, thiết bị theo đơn vị, tần suất sự cố, tiến độ kế hoạch, nhật ký \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Về mặt học phần, bài tập lớn đã vận hành trọn bộ quy trình phân tích thiết kế: khảo sát tài liệu quy trình thật $\rightarrow$ mô hình hóa chức năng (use case + activity) $\rightarrow$ cấu trúc (lớp + CRC) $\rightarrow$ hành vi (trình tự + trạng thái) $\rightarrow$ thiết kế (kiến trúc, CSDL, giao diện, bảo mật) $\rightarrow$ cài đặt nguyên mẫu chạy được và thử nghiệm end-to-end.
+
+\section{Bài học kinh nghiệm}
+
+\begin{itemize}
+  \item \textbf{Giữ đúng ngữ nghĩa nghiệp vụ quan trọng hơn thêm tính năng:} nhánh ``sự cố nhỏ tự khắc phục'' phải được giữ nhẹ (không phê duyệt) — nếu áp máy móc quy trình phê duyệt chung cho mọi luồng sẽ làm nặng thực tế vận hành.
+  \item \textbf{Tách bạch chuẩn và mở rộng:} các trường ngoài quy trình gốc (chi phí, mức độ ưu tiên, nhà thầu, SLA) được đánh dấu rõ để phục vụ thẩm định của Ban QMS và tra cứu về nguồn.
+  \item \textbf{Khảo sát tài liệu thật tiết lộ chi tiết quan trọng:} lỗi đánh máy BM/04 (hai bên cùng ghi ``BÊN B'') và việc nội dung không có phần CSHT dù tên file có — những phát hiện này được chuẩn hóa trong thiết kế.
+\end{itemize}
+
+\section{Hạn chế và hướng phát triển}
+
+\begin{enumerate}
+  \item \textbf{Tích hợp chữ ký số thật} (USB token/HSM theo Nghị định 130/2020/NĐ-CP) thay cho ký mô phỏng.
+  \item \textbf{SSO/Active Directory} của Cục để bỏ đăng nhập riêng.
+  \item \textbf{Mobile app đầy đủ} (thông báo đẩy khi có sự cố/nhắc lịch) thay cho giao diện responsive.
+  \item \textbf{Chạy song song và chuyển đổi} với biểu mẫu giấy theo kế hoạch được Ban QMS phê duyệt; sau đó đàm phán sửa đổi quy trình QT.QLD.09.01 bổ sung phụ lục ``vận hành trên hệ thống điện tử''.
+  \item \textbf{Mở rộng sang CSHT} (điện, nước, nhà xưởng) nếu Cục ban hành quy trình gộp như tên tài liệu đính kèm gợi ý.
+  \item \textbf{Tích hợp hệ thống quản lý tài sản/kế toán} qua REST API đã có sẵn.
+\end{enumerate}

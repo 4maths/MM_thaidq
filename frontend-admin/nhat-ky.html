@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nhật ký thao tác — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <style>
+    .table { font-size: .84rem; } .table th { text-align: left; }
+    .json-cell { max-width: 340px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: #8B8E99; font-family: ui-monospace, monospace; font-size: .78rem; }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="topbar-root"></div>
+
+      <main class="page">
+        <div class="page-head">
+          <div>
+            <h1>Nhật ký thao tác (Audit trail)</h1>
+            <p>Kiểm soát tài liệu theo ISO 9001:2015 — mọi thao tác được ghi vết, dữ liệu lịch sử không sửa/xóa.</p>
+          </div>
+        </div>
+
+        <section class="panel">
+          <div class="panel__head">
+            <h2 class="panel__title"><span>200 thao tác gần nhất</span></h2>
+          </div>
+          <div class="table__wrap">
+            <table class="table">
+              <thead>
+                <tr><th>Thời gian</th><th>Người thao tác</th><th>Hành động</th><th>Đối tượng</th><th>ID</th><th>Dữ liệu</th></tr>
+              </thead>
+              <tbody id="rows"><tr><td colspan="6">Đang tải…</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status">Đã cập nhật.</div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script>
+    async function load() {
+      try {
+        const res = await API.get('/reports/audit');
+        const actionCls = {
+          APPROVE: 'badge--ok', REJECT: 'badge--danger', CREATE: 'badge--info', UPDATE: 'badge--warn',
+          SUBMIT: 'badge--violet', SIGN: 'badge--violet', SIGN_COMPLETE: 'badge--ok', LOGIN: 'badge--info',
+          SELF_RESOLVE: 'badge--ok', COMPLETE: 'badge--ok', REVIEW: 'badge--warn',
+        };
+        document.getElementById('rows').innerHTML = res.data.length ? res.data.map((a) => `
+          <tr>
+            <td>${UI.datetime(a.created_at)}</td>
+            <td><b>${a.user_name || 'Hệ thống'}</b><br><small style="color:#8B8E99">${a.username || ''}</small></td>
+            <td><span class="badge ${actionCls[a.action] || 'badge--info'}">${a.action}</span></td>
+            <td>${a.entity_type}</td>
+            <td>#${a.entity_id ?? '—'}</td>
+            <td class="json-cell" title="${(a.new_values || a.old_values || '').toString().replace(/"/g, '&quot;')}">${a.new_values || a.old_values || '—'}</td>
+          </tr>`).join('') : '<tr><td colspan="6">Chưa có nhật ký.</td></tr>';
+      } catch (err) { showToast(err.message); }
+    }
+    if (guardPage()) load();
+  </script>
+</body>
+</html>

@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tổng quan — Hệ thống Quản lý Trang thiết bị</title>
+  <meta name="description" content="Dashboard quản trị Hệ thống quản lý trang thiết bị Cục Quản lý Dược — QT.QLD.09.01.">
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <style>
+    .chart-line path.line-violet { stroke: #8783E0; stroke-width: 2.5; fill: none; stroke-linecap: round; }
+    .chart-line path.line-yellow { stroke: #E4E45A; stroke-width: 2.5; fill: none; stroke-linecap: round; }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="topbar-root"></div>
+
+      <main class="page">
+        <div class="page-head">
+          <div>
+            <h1>Tổng quan</h1>
+            <p id="today-line">Hệ thống Quản lý Trang thiết bị — Cục Quản lý Dược (số liệu thật từ hệ thống)</p>
+          </div>
+          <a class="btn btn--light" href="bao-cao.html">Xem báo cáo chi tiết</a>
+        </div>
+
+        <!-- 4 thẻ thống kê (dữ liệu thật từ /reports/summary) -->
+        <section class="stats-grid" aria-label="Thống kê nhanh">
+          <article class="stat-card stat-card--violet">
+            <div class="stat-card__top">
+              <span class="stat-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><rect x="3" y="4" width="18" height="12" rx="2"/><path d="M8 20h8M12 16v4"/></svg>
+              </span>
+            </div>
+            <p class="stat-card__title">Trang thiết bị</p>
+            <p class="stat-card__sub"><b id="k-equip-total" style="font-size:1.6rem">—</b> thiết bị đang quản lý</p>
+          </article>
+
+          <article class="stat-card stat-card--mint">
+            <div class="stat-card__top">
+              <span class="stat-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2.5 20h19L12 3z"/></svg>
+              </span>
+            </div>
+            <p class="stat-card__title">Sự cố đang xử lý</p>
+            <p class="stat-card__sub"><b id="k-incident-open" style="font-size:1.6rem">—</b> sự cố chưa đóng</p>
+          </article>
+
+          <article class="stat-card stat-card--yellow">
+            <div class="stat-card__top">
+              <span class="stat-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M8 3v4M16 3v4M3 10h18"/></svg>
+              </span>
+            </div>
+            <p class="stat-card__title">Kế hoạch năm nay</p>
+            <p class="stat-card__sub"><b id="k-plan-done" style="font-size:1.6rem">—</b> / <span id="k-plan-total">—</span> hạng mục hoàn thành</p>
+          </article>
+
+          <article class="stat-card stat-card--pale">
+            <div class="stat-card__top">
+              <span class="stat-card__icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M12 2v20M17 6.5c0-2-2.2-3-5-3s-5 1-5 3 1.8 2.8 5 3.5 5 1.5 5 3.5-2.2 3-5 3-5-1-5-3"/></svg>
+              </span>
+            </div>
+            <p class="stat-card__title">Chi phí bảo trì dự kiến</p>
+            <p class="stat-card__sub"><b id="k-cost" style="font-size:1.6rem">—</b> năm nay</p>
+          </article>
+        </section>
+
+        <!-- Biểu đồ + danh sách sự cố mới -->
+        <section class="grid-2-1">
+          <article class="panel">
+            <div class="panel__head">
+              <h2 class="panel__title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M5 20v-7M12 20V5M19 20v-4"/></svg>
+                <span>Sự cố theo tháng
+                  <span class="panel__sub">12 tháng gần nhất</span>
+                </span>
+              </h2>
+              <div class="panel__actions">
+                <button class="chip chip--violet">Tổng sự cố</button>
+                <button class="chip chip--outline">Sửa chữa lớn</button>
+              </div>
+            </div>
+            <div class="chart chart-line" role="img" aria-label="Biểu đồ đường: số sự cố theo tháng">
+              <svg viewBox="0 0 640 240" fill="none" id="chart-incidents">
+                <g stroke="#E5E4F0" stroke-dasharray="2 7">
+                  <line x1="0" y1="40" x2="640" y2="40"/><line x1="0" y1="90" x2="640" y2="90"/>
+                  <line x1="0" y1="140" x2="640" y2="140"/><line x1="0" y1="190" x2="640" y2="190"/>
+                </g>
+                <g id="chart-paths"></g>
+              </svg>
+            </div>
+            <div class="chart-months" id="chart-months" role="group" aria-label="Tháng"></div>
+            <div class="chart-total">
+              <div><span>Tổng sự cố</span><b id="t-total">—</b></div>
+              <div><span>Sửa chữa / thuê ngoài</span><b id="t-repair">—</b></div>
+              <div><span>Tự khắc phục</span><b id="t-self">—</b></div>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel__head">
+              <h2 class="panel__title">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3 2.5 20h19L12 3z"/><path d="M12 10v4M12 17h.01"/></svg>
+                <span>Sự cố mới cần xử lý
+                  <span class="panel__sub">Trạng thái Mới / Đang xem xét</span>
+                </span>
+              </h2>
+            </div>
+            <div class="task-list" id="incident-list">
+              <div class="task-item"><span class="task-item__meta"><b>Đang tải…</b></span></div>
+            </div>
+            <p style="margin-top:1.25rem"><a class="link-more" href="su-co.html">Xem tất cả sự cố →</a></p>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status">Đã cập nhật.</div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script>
+    if (guardPage()) {
+      document.getElementById('today-line').textContent =
+        new Date().toLocaleDateString('vi-VN', { weekday: 'long', day: '2-digit', month: '2-digit', year: 'numeric' })
+        + ' · Cục Quản lý Dược — Bộ Y tế (số liệu thật)';
+
+      API.get('/reports/summary').then((s) => {
+        document.getElementById('k-equip-total').textContent = s.equipment.total;
+        document.getElementById('k-incident-open').textContent = s.incident.dang_xu_ly;
+        document.getElementById('k-plan-done').textContent = s.plan.done;
+        document.getElementById('k-plan-total').textContent = s.plan.items;
+        document.getElementById('k-cost').textContent = UI.money(s.cost.estimated_cost);
+      }).catch((e) => showToast && showToast(e.message));
+
+      API.get('/reports/incident-frequency').then((r) => {
+        const rows = r.data;
+        const max = Math.max(1, ...rows.map((x) => x.total));
+        const W = 640, H = 240, pad = 20;
+        const x = (i) => rows.length > 1 ? pad + (i * (W - 2 * pad) / (rows.length - 1)) : W / 2;
+        const y = (v) => H - pad - (v / max) * (H - 2 * pad);
+        const line = (key) => rows.map((r, i) => `${i === 0 ? 'M' : 'L'}${x(i).toFixed(1)} ${y(r[key]).toFixed(1)}`).join(' ');
+        document.getElementById('chart-paths').innerHTML =
+          `<path class="line-violet" d="${line('total')}"/>` +
+          `<path class="line-yellow" d="${line('sua_chua')}"/>`;
+        document.getElementById('chart-months').innerHTML = rows.map((r) => `<button class="chip">${r.month.split('/')[0]}</button>`).join('');
+        document.getElementById('t-total').textContent = rows.reduce((a, r) => a + r.total, 0);
+        document.getElementById('t-repair').textContent = rows.reduce((a, r) => a + r.sua_chua, 0);
+        document.getElementById('t-self').textContent = rows.reduce((a, r) => a + r.tu_khac_phuc, 0);
+      }).catch(() => {});
+
+      API.get('/incidents?status=MOI&pageSize=6').then((r) => {
+        const host = document.getElementById('incident-list');
+        if (!r.data.length) {
+          host.innerHTML = '<div class="task-item"><span class="task-item__meta"><b>Không có sự cố mới</b><span>Mọi báo cáo đã được xử lý</span></span></div>';
+          return;
+        }
+        host.innerHTML = r.data.map((i) => `
+          <div class="task-item">
+            <span class="avatar avatar--violet">${UI.initials(i.reported_by_name)}</span>
+            <span class="task-item__meta"><b>${i.code}</b><span>${i.equipment_name} — ${i.description.slice(0, 42)}…</span></span>
+            <time>${UI.datetime(i.reported_at)}</time>
+            ${UI.badge(i.status)}
+          </div>`).join('');
+      }).catch((e) => {
+        document.getElementById('incident-list').innerHTML =
+          `<div class="task-item"><span class="task-item__meta"><b>${e.message}</b><span>Đăng nhập lại nếu phiên đã hết hạn</span></span></div>`;
+      });
+    }
+  </script>
+</body>
+</html>

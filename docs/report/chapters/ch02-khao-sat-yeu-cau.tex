@@ -1,0 +1,162 @@
+\chapter{Khảo sát và phân tích yêu cầu}
+
+\section{Mô tả quy trình hiện tại (As-is)}
+
+\subsection{Vai trò và trách nhiệm}
+
+Theo mục 4 và mục 6.2 của quy trình QT.QLD.09.01, các vai trò tham gia được tổng hợp trong Bảng~\ref{tab:vaitro}.
+
+\begin{table}[h]
+\centering
+\caption{Vai trò và trách nhiệm theo quy trình gốc}
+\label{tab:vaitro}
+\begin{tabular}{P{3.4cm}P{11.6cm}}
+\toprule
+\textbf{Vai trò} & \textbf{Trách nhiệm chính} \\
+\midrule
+Đơn vị sử dụng & Xây dựng, cập nhật danh mục và hồ sơ trang thiết bị của đơn vị; thông báo sự cố/nguy cơ sự cố cho Văn phòng Cục; tự khắc phục sự cố nhỏ và cập nhật hồ sơ; phối hợp thực hiện, theo dõi giám sát, nghiệm thu; lưu biên bản nghiệm thu \\
+Văn phòng Cục & Lập danh mục tổng toàn Cục (BM/01); cập nhật danh mục và hồ sơ sau sự cố/sửa chữa; lập kế hoạch bảo dưỡng hàng năm (BM/03) hoặc tiếp nhận văn bản đề nghị; trình Lãnh đạo Cục phê duyệt; kiểm tra nguyên nhân sự cố; liên hệ đơn vị ngoài; theo dõi giám sát; lập biên bản nghiệm thu (BM/04); lưu hồ sơ \\
+Lãnh đạo Cục & Phê duyệt kế hoạch bảo dưỡng/thay thế, phương án bổ sung/nâng cấp, phương án sửa chữa thuê ngoài \\
+Lãnh đạo chất lượng, Ban QMS & Kiểm tra, bảo đảm quy trình được thực hiện và tuân thủ \\
+Bên ngoài (Công ty) & Thực hiện bảo dưỡng/sửa chữa/thay thế khi được thuê; tham gia ký biên bản nghiệm thu (Bên B) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Luồng nghiệp vụ chính}
+
+Quy trình gồm năm nhóm bước (mục 6.2 của quy trình):
+
+\begin{enumerate}
+  \item \textbf{6.2.1 Lập danh mục trang thiết bị:} Văn phòng Cục xây dựng danh mục toàn Cục; bổ sung thiết bị mới, cập nhật tình trạng sau sự cố/sửa chữa; các đơn vị xây dựng và cập nhật danh mục của đơn vị. Sử dụng BM/01.
+  \item \textbf{6.2.2 Xây dựng hồ sơ trang thiết bị:} đơn vị sử dụng xây dựng hồ sơ, cập nhật khi có sự cố, sửa chữa, thay thế, bảo dưỡng. Sử dụng BM/02.
+  \item \textbf{6.2.3 Bảo dưỡng, sửa chữa:} hai nhánh song song:
+  \begin{itemize}
+    \item (a) \emph{Hàng năm}, Văn phòng Cục lập kế hoạch bảo dưỡng định kỳ hoặc đề xuất bổ sung, nâng cấp $\rightarrow$ trình Lãnh đạo Cục phê duyệt (BM/03). Thiết bị cần bảo dưỡng ngoài kế hoạch hoặc đơn vị cần bổ sung/nâng cấp: gửi văn bản cho Văn phòng Cục trình duyệt.
+    \item (b) \emph{Sửa chữa khi có sự cố:} đơn vị thông báo cho Văn phòng Cục xem xét. \textbf{Sự cố nhỏ khắc phục ngay được: đơn vị tự khắc phục và cập nhật hồ sơ (không cần phê duyệt).} Không tự khắc phục được, cần thuê ngoài: lập văn bản đề nghị $\rightarrow$ Văn phòng Cục trình Lãnh đạo Cục phê duyệt.
+  \end{itemize}
+  \item \textbf{6.2.4 Thực hiện:} theo kế hoạch hoặc phương án đã duyệt; Văn phòng Cục phối hợp đơn vị sử dụng tiến hành và cập nhật danh sách, hồ sơ thiết bị. Trong bảo dưỡng nếu phát hiện nguyên nhân tiềm tàng gây sự cố thì báo lại để đề xuất phương án sửa chữa, thay thế.
+  \item \textbf{6.2.5 Kiểm tra, nghiệm thu:} khi thuê ngoài — theo dõi, giám sát; kiểm tra, chạy thử sau khi kết thúc; lập biên bản nghiệm thu (BM/04); cập nhật hồ sơ thiết bị.
+\end{enumerate}
+
+\subsection{Điểm quyết định then chốt}
+
+Điểm rẽ nhánh quan trọng nhất của lưu đồ nằm sau bước ``Kiểm tra, xem xét nguyên nhân'':
+\begin{itemize}
+  \item \textbf{[Sự cố nhỏ]} $\rightarrow$ Tự khắc phục $\rightarrow$ cập nhật hồ sơ $\rightarrow$ kết thúc. \emph{Không} đi qua phê duyệt.
+  \item \textbf{[Lớn / cần thuê ngoài]} $\rightarrow$ Lập phương án sửa chữa (hoặc kế hoạch thay thế, bảo dưỡng) $\rightarrow$ \textbf{Phê duyệt (Lãnh đạo Cục)} $\rightarrow$ Thực hiện $\rightarrow$ Kiểm tra, nghiệm thu $\rightarrow$ Lưu hồ sơ.
+\end{itemize}
+Thiết kế hệ thống ở Chương 6 tái hiện đúng cấu trúc này: nhánh nhỏ chỉ cập nhật hồ sơ, nhánh lớn bắt buộc qua state machine phê duyệt.
+
+\section{Trường dữ liệu của bốn biểu mẫu}
+
+Nhóm trích xuất toàn văn quy trình gốc và xác minh nguyên văn các trường dữ liệu (đây là nguồn dữ liệu để thiết kế CSDL ở Chương 6).
+
+\begin{table}[h]
+\centering
+\caption{Trường dữ liệu của các biểu mẫu BM.QLD.09.01/01--/04}
+\label{tab:bieumau}
+\begin{tabular}{P{3.1cm}P{11.9cm}}
+\toprule
+\textbf{Biểu mẫu} & \textbf{Trường dữ liệu (nguyên văn)} \\
+\midrule
+BM/01 --- Danh mục trang thiết bị & STT; Tên trang thiết bị; Mã số; Nước sản xuất; Ngày nhận; Đơn vị sử dụng \\
+\addlinespace
+BM/02 --- Hồ sơ trang thiết bị & Thông tin đầu: Tên trang thiết bị; Ngày nhận; Mã số; Đơn vị sử dụng. Bảng lịch sử: STT; Ngày thực hiện; Nội dung bảo trì, sửa chữa; Người thực hiện \\
+\addlinespace
+BM/03 --- Kế hoạch bảo dưỡng, thay thế & Năm; STT; Tên trang thiết bị; Mã số; Đơn vị sử dụng; Nội dung; Đơn vị thực hiện (nội bộ/bên ngoài); Thời gian dự kiến (tháng); Ghi chú. Chữ ký: Văn phòng Cục và Lãnh đạo Cục \\
+\addlinespace
+BM/04 --- Biên bản nghiệm thu & Quốc hiệu, tiêu ngữ; Hà Nội, ngày... tháng... năm...; Đại diện Cục Quản lý Dược (Bên A): 2 người (Họ tên, Đơn vị); Đại diện Công ty (Bên B): 2 người (Họ tên, Đơn vị); ``Bên B đã thực hiện... các nội dung công việc sau''; ``Tình trạng hoạt động của trang thiết bị sau khi Bên B thực hiện''; ``Lập thành 02 bản, mỗi bên giữ 01 bản''. Chữ ký hai bên \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\textbf{Nhận xét khảo sát:} (i) nguyên bản \emph{không có} trường chi phí, mức độ ưu tiên hay danh mục mã hóa tình trạng — hệ thống bổ sung các trường này như ``mở rộng đề xuất'' (đánh dấu rõ ở Chương 6); (ii) biên bản BM/04 của nguyên bản có lỗi đánh máy ở phần chữ ký (cả hai bên đều ghi ``BÊN B'') — hệ thống chuẩn hóa thành ``BÊN A'' (Cục Quản lý Dược) và ``BÊN B'' (Công ty); (iii) tên file tài liệu đính kèm có ``và CSHT'' nhưng nội dung lần ban hành 01 không đề cập cơ sở hạ tầng.
+
+\section{Quy định lưu trữ hồ sơ (mục 7)}
+
+\begin{table}[h]
+\centering
+\caption{Hồ sơ, nơi lưu và thời hạn lưu trữ theo mục 7 của quy trình}
+\label{tab:luutru}
+\begin{tabular}{P{6.2cm}P{2.8cm}P{2.4cm}P{3.4cm}}
+\toprule
+\textbf{Tên hồ sơ} & \textbf{Ký hiệu} & \textbf{Nơi lưu} & \textbf{Thời gian lưu} \\
+\midrule
+Danh mục trang thiết bị & BM.QLD.09.01/01 & Văn phòng Cục, Đơn vị sử dụng & Đến lần cập nhật tiếp theo \\
+Hồ sơ trang thiết bị & BM.QLD.09.01/02 & Đơn vị sử dụng & Đến khi máy không sử dụng \\
+Kế hoạch bảo dưỡng, thay thế & BM.QLD.09.01/03 & Văn phòng Cục & 1 năm \\
+Biên bản nghiệm thu & BM.QLD.09.01/04 & Đơn vị sử dụng & 1 năm \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+Hệ thống điện tử áp dụng các thời hạn này ở tầng ứng dụng (cảnh báo hết hạn lưu trữ) và tách bạch với nguyên tắc truy vết của ISO 9001: dữ liệu nghiệp vụ được giữ vết qua nhật ký (audit trail) append-only; thời hạn lưu trữ quy định việc lưu hồ sơ biểu mẫu tương ứng.
+
+\section{Phân tích vấn đề và yêu cầu}
+
+\subsection{Vấn đề (Problems)}
+
+\begin{table}[h]
+\centering
+\caption{Vấn đề của quy trình giấy và hệ quả}
+\label{tab:vande}
+\begin{tabular}{P{0.8cm}P{6.2cm}P{8cm}}
+\toprule
+\textbf{STT} & \textbf{Vấn đề} & \textbf{Hệ quả} \\
+\midrule
+P1 & Hồ sơ phân tán tại đơn vị, quản lý bằng giấy/Excel & Khó tổng hợp, mất đồng bộ giữa danh mục đơn vị và danh mục Văn phòng Cục \\
+P2 & Cập nhật hồ sơ BM/02 thủ công, không bắt buộc & Thiếu vết truy vết, Ban QMS khó kiểm tra tuân thủ \\
+P3 & Không có nhắc lịch bảo dưỡng & Bỏ sót hạng mục đến hạn, thiết bị hỏng ngoài dự kiến \\
+P4 & Phê duyệt bằng văn bản giấy & Chậm, không thấy trạng thái, khó đôn đốc \\
+P5 & Nghiệm thu lưu 1 năm tại đơn vị & Khó tra cứu khi tranh chấp nhà thầu, không thống kê được chi phí \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\subsection{Yêu cầu chức năng}
+
+\begin{longtable}{P{1.6cm}P{8.6cm}P{2cm}P{2.6cm}}
+\caption{Danh mục yêu cầu chức năng}\label{tab:fr}\\
+\toprule
+\textbf{Mã} & \textbf{Yêu cầu} & \textbf{Vấn đề giải quyết} & \textbf{Quy trình gốc} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{Mã} & \textbf{Yêu cầu} & \textbf{Vấn đề} & \textbf{6.2.x} \\
+\midrule
+\endhead
+FR-01 & Quản lý danh mục thiết bị: thêm, sửa, lọc theo tình trạng/đơn vị, tìm kiếm, xuất Excel theo đúng cột BM/01 & P1 & 6.2.1 \\
+FR-02 & Hồ sơ thiết bị điện tử: timeline lịch sử bảo trì/sửa chữa theo BM/02, tự ghi bản ghi khi hoàn thành khắc phục/bảo dưỡng/nghiệm thu & P2 & 6.2.2 \\
+FR-03 & Báo sự cố trực tuyến (kể cả thiết bị di động), kèm mức độ ước lượng của đơn vị & P3 & 6.2.3b \\
+FR-04 & Xem xét nguyên nhân và phân loại xử lý: tự khắc phục / nội bộ / thuê ngoài & P4 & 6.2.3b \\
+FR-05 & Luồng tự khắc phục: đơn vị ghi nội dung khắc phục $\rightarrow$ hệ thống tự cập nhật hồ sơ và đóng sự cố, \textbf{không qua phê duyệt} & P4 & 6.2.3b \\
+FR-06 & Lập phương án sửa chữa khi thuê ngoài, trình Lãnh đạo Cục phê duyệt/từ chối (kèm lý do) & P4 & 6.2.3b \\
+FR-07 & Lập kế hoạch bảo dưỡng hàng năm (nhiều hạng mục), trình duyệt, phê duyệt/từ chối, theo dõi tiến độ từng hạng mục & P3, P4 & 6.2.3a \\
+FR-08 & Nhắc lịch tự động: hạng mục dự kiến trong tháng chưa hoàn thành $\rightarrow$ thông báo Văn phòng Cục và đơn vị & P3 & 6.2.3a \\
+FR-09 & Nghiệm thu điện tử theo BM/04: lập biên bản, quản lý đại diện hai bên, ký điện tử, đủ chữ ký $\rightarrow$ đóng sự cố + cập nhật hồ sơ + thiết bị về hoạt động & P5 & 6.2.5 \\
+FR-10 & Quản lý nhà thầu ngoài (thêm mới, thông tin liên hệ) & P5 & (mở rộng) \\
+FR-11 & Báo cáo thống kê: thiết bị theo đơn vị, tình trạng, tần suất sự cố, tiến độ kế hoạch, chi phí dự kiến & P1--P5 & (mở rộng) \\
+FR-12 & Phân quyền theo vai trò; đăng nhập nội bộ & P2 & mục 4 \\
+FR-13 & Nhật ký thao tác append-only phục vụ kiểm soát tài liệu ISO 9001 & P2 & (ISO) \\
+\bottomrule
+\end{longtable}
+
+\subsection{Yêu cầu phi chức năng}
+
+\begin{enumerate}[label=\textbf{NFR-\arabic*.}]
+  \item \textbf{Truy vết:} dữ liệu lịch sử (hồ sơ thiết bị, audit log) chỉ thêm, không sửa/xóa.
+  \item \textbf{Bảo mật:} mật khẩu băm bcrypt; phiên JWT 8 giờ; phân quyền chặt theo vai trò ở tầng API.
+  \item \textbf{Tính khả dụng:} giao diện web responsive, dùng tốt trên điện thoại để báo sự cố tại chỗ.
+  \item \textbf{Sao lưu:} dữ liệu nằm trong volume Docker; kịch bản \texttt{pg\_dump} hằng ngày; thời hạn lưu trữ theo Bảng~\ref{tab:luutru}.
+  \item \textbf{Khả năng mở rộng:} kiến trúc module + REST API, sẵn sàng tích hợp hệ thống quản lý tài sản hoặc SSO/AD sau này.
+  \item \textbf{Hiệu năng:} đáp ứng tra cứu danh mục vài trăm thiết bị toàn Cục trong thời gian ngắn hơn 1 giây (mức lý thuyết, chưa đo lường chính thức).
+\end{enumerate}
+
+\section{Phân tích độ khả thi}
+
+\begin{itemize}
+  \item \textbf{Kỹ thuật:} quy mô nhỏ (vài trăm thiết bị, vài chục người dùng nội bộ), dữ liệu có cấu trúc bảng biểu rõ ràng $\rightarrow$ kiến trúc web ba lớp với CSDL quan hệ (PostgreSQL) là phù hợp; không cần workflow engine nặng, dùng state machine đơn giản trong mã nguồn.
+  \item \textbf{Kinh tế:} chi phí hạ tầng thấp (1 máy chủ nội bộ hoặc VPS, Docker); chi phí phát triển thuộc phạm vi bài tập lớn; lợi ích giảm mất mát do sự cố và tiết kiệm thời gian phê duyệt.
+  \item \textbf{Vận hành:} người dùng đã quen biểu mẫu giấy; giao diện tái hiện đúng các cột của BM/01--/04 để giảm rào cản; cần đào tạo ngắn và phê duyệt của Ban QMS về việc chạy song song giấy/điện tử.
+\end{itemize}

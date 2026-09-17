@@ -1,0 +1,28 @@
+# ===== Phụ thuộc & build =====
+node_modules/
+backend/uploads/
+
+# ===== LaTeX: file trung gian (giữ main.pdf) =====
+*.aux
+*.log
+*.out
+*.toc
+*.lof
+*.lot
+*.synctex.gz
+*.fls
+*.fdb_latexpdf
+*.xdv
+
+# ===== Môi trường & bí mật =====
+.env
+.env.local
+
+# ===== Hệ điều hành / trình duyệt =====
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ===== Thư mục tạm của phiên làm việc (không thuộc dự án) =====
+.tmp-shots/
+.agents/

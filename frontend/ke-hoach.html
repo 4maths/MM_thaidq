@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kế hoạch bảo dưỡng hàng năm — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .table-wrap { overflow-x: auto; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; }
+    table.tbl { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 820px; }
+    table.tbl th { text-align: left; padding: 12px 14px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); }
+    table.tbl td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .year-tabs { display: flex; gap: 10px; flex-wrap: wrap; margin: 18px 0; }
+    .empty { padding: 40px; text-align: center; opacity: .65; }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <nav class="topbar__links"><a href="index.html">Quy trình QT.QLD.09.01 — mục 6.2.3a</a></nav>
+      <div class="topbar__lang"><span style="opacity:.7">BM.QLD.09.01/03</span></div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html">
+        <svg class="brand__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <circle cx="24" cy="24" r="21" stroke="currentColor" stroke-width="2"/>
+          <path d="M15 33 24 12l9 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18.5 26h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand__text">
+          <span class="brand__name">QUẢN LÝ TRANG THIẾT BỊ</span>
+          <span class="brand__org">Cục Quản lý Dược · Bộ Y tế</span>
+        </span>
+      </a>
+      <nav class="main-nav" aria-label="Menu chính">
+        <a href="index.html">Trang chủ</a>
+        <a href="thiet-bi.html">Tra cứu thiết bị</a>
+        <a href="bao-su-co.html">Báo sự cố</a>
+        <a href="su-co-cua-toi.html">Sự cố của đơn vị</a>
+        <a href="ke-hoach.html" class="is-active">Kế hoạch bảo dưỡng</a>
+      </nav>
+      <div class="header-actions">
+        <a class="login-link" href="dang-nhap.html" data-role="login-link">Đăng nhập</a>
+        <button class="nav-toggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container page-head">
+      <nav class="breadcrumb" aria-label="Vị trí trang">
+        <a href="index.html">Trang chủ</a><span>/</span>Kế hoạch bảo dưỡng
+      </nav>
+      <h1>Kế hoạch bảo dưỡng, thay thế hàng năm</h1>
+      <p class="page-head__desc">Số hóa biểu mẫu BM.QLD.09.01/03 — do Văn phòng Cục lập, Lãnh đạo Cục phê duyệt; hệ thống tự nhắc lịch khi đến hạn.</p>
+    </div>
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="year-tabs" id="year-tabs"></div>
+        <div id="plan-status" style="margin-bottom:16px;"></div>
+        <div class="table-wrap">
+          <table class="tbl" aria-label="Các hạng mục kế hoạch">
+            <thead>
+              <tr>
+                <th style="width:52px">STT</th>
+                <th>Tên trang thiết bị</th>
+                <th>Mã số</th>
+                <th>Đơn vị sử dụng</th>
+                <th>Nội dung</th>
+                <th>Đơn vị thực hiện</th>
+                <th>Thời gian dự kiến</th>
+                <th>Tiến độ</th>
+              </tr>
+            </thead>
+            <tbody id="rows"><tr><td colspan="8" class="empty">Đang tải…</td></tr></tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>© <span data-role="year">2026</span> Cục Quản lý Dược – Bộ Y tế.</span>
+      <span>QT.QLD.09.01</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/api.js?v=2"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    let plans = [];
+
+    async function load() {
+      try {
+        const res = await API.get('/plans');
+        plans = res.data;
+        if (!plans.length) {
+          document.getElementById('rows').innerHTML = '<tr><td colspan="8" class="empty">Chưa có kế hoạch nào.</td></tr>';
+          return;
+        }
+        const tabs = document.getElementById('year-tabs');
+        tabs.innerHTML = plans.map((p, idx) =>
+          `<button class="btn-outline year-tab ${idx === 0 ? 'is-active' : ''}" data-year="${p.year}" style="padding:8px 20px;">Năm ${p.year}</button>`).join('');
+        tabs.querySelectorAll('.year-tab').forEach((btn) =>
+          btn.addEventListener('click', () => {
+            tabs.querySelectorAll('.year-tab').forEach((b) => b.classList.remove('is-active'));
+            btn.classList.add('is-active');
+            showPlan(Number(btn.dataset.year));
+          }));
+        showPlan(plans[0].year);
+      } catch (err) {
+        document.getElementById('rows').innerHTML = `<tr><td colspan="8" class="empty">${err.message} — cần <a href="dang-nhap.html" style="color:#6FA7B4">đăng nhập</a>.</td></tr>`;
+      }
+    }
+
+    async function showPlan(year) {
+      const res = await API.get('/plans');
+      const plan = res.data.find((p) => p.year === year);
+      const detail = await API.get('/plans/' + plan.id);
+      document.getElementById('plan-status').innerHTML =
+        `Kế hoạch năm <strong>${year}</strong> — ${UI.statusBadge(plan.status)}` +
+        (plan.approved_by_name ? ` · Người phê duyệt: ${plan.approved_by_name}` : '');
+
+      document.getElementById('rows').innerHTML = detail.items.map((i, idx) => `
+        <tr>
+          <td>${idx + 1}</td>
+          <td><strong>${i.equipment_name}</strong></td>
+          <td><code>${i.equipment_code}</code></td>
+          <td>${i.department_name || '—'}</td>
+          <td style="max-width:260px">${i.content}</td>
+          <td>${UI.statusBadge(i.executor_type)}</td>
+          <td>${UI.monthName(i.planned_month)}</td>
+          <td>${UI.statusBadge(i.status)}</td>
+        </tr>`).join('');
+    }
+
+    load();
+  </script>
+</body>
+</html>

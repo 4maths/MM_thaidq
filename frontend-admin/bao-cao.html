@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Báo cáo thống kê — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <style>
+    .table { font-size: .86rem; } .table th { text-align: left; }
+    .bar-row { display: grid; grid-template-columns: 220px 1fr 60px; gap: .6rem; align-items: center; margin-bottom: .55rem; font-size: .85rem; }
+    .bar-track { background: #EFEEF8; border-radius: 999px; height: 16px; overflow: hidden; }
+    .bar-fill { height: 100%; background: linear-gradient(90deg, #8783E0, #A5A2EC); border-radius: 999px; }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="topbar-root"></div>
+
+      <main class="page">
+        <div class="page-head">
+          <div>
+            <h1>Báo cáo &amp; thống kê</h1>
+            <p>Phục vụ Ban QMS và Lãnh đạo Cục: cơ cấu thiết bị, tần suất sự cố, tiến độ kế hoạch và chi phí.</p>
+          </div>
+          <button class="btn btn--light" onclick="window.print()">Xuất / in báo cáo</button>
+        </div>
+
+        <section class="grid-2-1">
+          <article class="panel">
+            <div class="panel__head">
+              <h2 class="panel__title"><span>Số thiết bị theo đơn vị</span></h2>
+            </div>
+            <div style="padding: 1rem 1.25rem;" id="dept-bars"><p style="color:#8B8E99">Đang tải…</p></div>
+          </article>
+
+          <article class="panel">
+            <div class="panel__head">
+              <h2 class="panel__title"><span>Tình trạng thiết bị</span></h2>
+            </div>
+            <div class="task-list" id="status-list"><div class="task-item"><span class="task-item__meta"><b>Đang tải…</b></span></div></div>
+          </article>
+        </section>
+
+        <section class="grid-2-1" style="margin-top:1.25rem">
+          <article class="panel">
+            <div class="panel__head">
+              <h2 class="panel__title"><span>Tiến độ kế hoạch bảo dưỡng <span class="panel__sub" id="plan-year-label"></span></span></h2>
+              <div class="panel__actions">
+                <select id="plan-year" class="chip chip--outline"></select>
+              </div>
+            </div>
+            <div class="table__wrap">
+              <table class="table">
+                <thead>
+                  <tr><th>Thiết bị</th><th>Đơn vị</th><th>Nội dung</th><th>Thực hiện</th><th>Thời gian</th><th>Tiến độ</th><th>Chi phí</th></tr>
+                </thead>
+                <tbody id="plan-rows"><tr><td colspan="7">Đang tải…</td></tr></tbody>
+              </table>
+            </div>
+          </article>
+
+          <article class="panel">
+            <div class="panel__head">
+              <h2 class="panel__title"><span>Tần suất sự cố</span></h2>
+            </div>
+            <div class="table__wrap">
+              <table class="table">
+                <thead><tr><th>Tháng</th><th>Tổng</th><th>Tự khắc phục</th><th>Sửa chữa</th></tr></thead>
+                <tbody id="incident-rows"><tr><td colspan="4">Đang tải…</td></tr></tbody>
+              </table>
+            </div>
+          </article>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status">Đã cập nhật.</div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script>
+    async function load() {
+      try {
+        const dept = await API.get('/reports/equipment-by-department');
+        const max = Math.max(1, ...dept.data.map((d) => d.total));
+        document.getElementById('dept-bars').innerHTML = dept.data.map((d) => `
+          <div class="bar-row">
+            <span>${d.department}</span>
+            <span class="bar-track"><span class="bar-fill" style="width:${Math.round(d.total / max * 100)}%"></span></span>
+            <b style="text-align:right">${d.total}</b>
+          </div>`).join('');
+
+        const sum = await API.get('/reports/summary');
+        document.getElementById('status-list').innerHTML = `
+          <div class="task-item"><span class="task-item__meta"><b>${sum.equipment.hoat_dong}</b><span>Đang hoạt động</span></span><span class="badge badge--ok">OK</span></div>
+          <div class="task-item"><span class="task-item__meta"><b>${sum.equipment.dang_hong}</b><span>Sự cố / đang sửa chữa</span></span><span class="badge badge--warn">Cần xử lý</span></div>
+          <div class="task-item"><span class="task-item__meta"><b>${sum.equipment.ngung_su_dung}</b><span>Ngừng sử dụng</span></span><span class="badge badge--info">Lưu trữ</span></div>
+          <div class="task-item"><span class="task-item__meta"><b>${UI.money(sum.cost.estimated_cost)}</b><span>Chi phí bảo trì dự kiến năm nay</span></span></div>`;
+
+        const years = await API.get('/plans');
+        const yearSel = document.getElementById('plan-year');
+        yearSel.innerHTML = years.data.length
+          ? years.data.map((p) => `<option value="${p.year}">Năm ${p.year}</option>`).join('')
+          : `<option value="${new Date().getFullYear()}">Năm ${new Date().getFullYear()}</option>`;
+        document.getElementById('plan-year-label').textContent = `— năm ${yearSel.value}`;
+        loadPlan(yearSel.value);
+        yearSel.addEventListener('change', () => {
+          document.getElementById('plan-year-label').textContent = `— năm ${yearSel.value}`;
+          loadPlan(yearSel.value);
+        });
+
+        const inc = await API.get('/reports/incident-frequency');
+        document.getElementById('incident-rows').innerHTML = inc.data.length ? inc.data.map((r) => `
+          <tr><td>${r.month}</td><td><b>${r.total}</b></td><td>${r.tu_khac_phuc}</td><td>${r.sua_chua}</td></tr>`).join('')
+          : '<tr><td colspan="4">Chưa có dữ liệu sự cố.</td></tr>';
+      } catch (err) { showToast(err.message); }
+    }
+
+    async function loadPlan(year) {
+      const res = await API.get('/reports/plan-progress?year=' + year);
+      document.getElementById('plan-rows').innerHTML = res.data.length ? res.data.map((r) => `
+        <tr>
+          <td><b>${r.equipment}</b><br><small style="color:#8B8E99">${r.equipment_code}</small></td>
+          <td>${r.department || '—'}</td>
+          <td style="max-width:220px">${r.content}</td>
+          <td>${UI.badge(r.executor_type)}</td>
+          <td>${UI.monthName(r.planned_month)}</td>
+          <td>${UI.badge(r.status)}</td>
+          <td>${UI.money(r.estimated_cost)}</td>
+        </tr>`).join('') : '<tr><td colspan="7">Chưa có hạng mục nào trong kế hoạch năm này.</td></tr>';
+    }
+
+    if (guardPage()) load();
+  </script>
+</body>
+</html>

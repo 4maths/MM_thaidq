@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Biên bản nghiệm thu — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <style>
+    .table { font-size: .86rem; } .table th { text-align: left; }
+    .rep-row { display: grid; grid-template-columns: 90px 1fr 1fr; gap: .5rem; margin-bottom: .5rem; }
+    .rep-row input, .rep-row select { width: 100%; padding: 9px 10px; border: 1.5px solid #E5E4F0; border-radius: 10px; font: inherit; font-size: .85rem; }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="topbar-root"></div>
+
+      <main class="page">
+        <div class="page-head">
+          <div>
+            <h1>Biên bản nghiệm thu</h1>
+            <p>Số hóa BM.QLD.09.01/04 — lập khi thuê ngoài bảo dưỡng/sửa chữa; ký đủ Bên A &amp; Bên B thì đóng sự cố và cập nhật hồ sơ thiết bị.</p>
+          </div>
+          <button class="btn btn--dark" data-open-modal="modalAdd" id="btn-add">+ Lập biên bản</button>
+        </div>
+
+        <section class="panel">
+          <div class="panel__head">
+            <h2 class="panel__title"><span>Danh sách biên bản</span></h2>
+          </div>
+          <div class="table__wrap">
+            <table class="table">
+              <thead>
+                <tr><th>Mã</th><th>Thiết bị</th><th>Nội dung đã thực hiện</th><th>Tình trạng sau</th><th>Ngày lập</th><th>Chữ ký</th><th>Trạng thái</th><th style="text-align:right">Thao tác</th></tr>
+              </thead>
+              <tbody id="rows"><tr><td colspan="8">Đang tải…</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal lập biên bản -->
+  <div class="modal" id="modalAdd" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+    <div class="modal__overlay" data-close-modal></div>
+    <div class="modal__card" style="max-width:720px">
+      <div class="modal__head">
+        <h3 id="addTitle">Lập biên bản nghiệm thu</h3>
+        <button class="btn-icon" data-close-modal aria-label="Đóng">✕</button>
+      </div>
+      <form id="acc-form">
+        <div class="form-grid">
+          <div class="field"><label for="a-repair">Phương án sửa chữa (theo sự cố)</label><select id="a-repair"></select></div>
+          <div class="field"><label for="a-date">Ngày lập</label><input id="a-date" type="date"></div>
+        </div>
+        <div class="field"><label for="a-work">Bên B đã thực hiện các nội dung công việc sau *</label>
+          <textarea id="a-work" required style="width:100%; min-height:70px; border:1.5px solid #E5E4F0; border-radius:10px; padding:10px; font:inherit;"></textarea>
+        </div>
+        <div class="field"><label for="a-cond">Tình trạng hoạt động của trang thiết bị sau khi Bên B thực hiện *</label>
+          <textarea id="a-cond" required style="width:100%; min-height:70px; border:1.5px solid #E5E4F0; border-radius:10px; padding:10px; font:inherit;"></textarea>
+        </div>
+        <p style="font-size:.85rem; color:#8B8E99; margin:.5rem 0 .5rem;">Đại diện hai bên (Bên A — Cục Quản lý Dược; Bên B — Công ty):</p>
+        <div id="reps-host">
+          <div class="rep-row">
+            <select class="rp-side"><option value="A">Bên A</option><option value="B">Bên B</option></select>
+            <input class="rp-name" placeholder="Họ tên (Ông/Bà)">
+            <input class="rp-org" placeholder="Đơn vị">
+          </div>
+          <div class="rep-row">
+            <select class="rp-side"><option value="A">Bên A</option><option value="B" selected>Bên B</option></select>
+            <input class="rp-name" placeholder="Họ tên (Ông/Bà)">
+            <input class="rp-org" placeholder="Đơn vị">
+          </div>
+        </div>
+        <button type="button" class="btn btn--light" id="btn-add-rep" style="margin-top:.4rem">+ Thêm đại diện</button>
+        <p class="form-hint" style="margin-top:.75rem">Biên bản lập thành 02 bản, mỗi bên giữ 01 bản (lưu trữ 1 năm theo mục 7 của quy trình).</p>
+        <div class="modal__foot">
+          <button type="button" class="btn btn--light" data-close-modal>Huỷ</button>
+          <button type="submit" class="btn btn--dark">Lập biên bản</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status">Đã cập nhật.</div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script>
+    let repairPlans = [];
+
+    async function load() {
+      try {
+        const res = await API.get('/acceptances');
+        document.getElementById('rows').innerHTML = res.data.length ? res.data.map((a) => `
+          <tr>
+            <td><code>${a.code}</code></td>
+            <td>${a.equipment_name || '—'}</td>
+            <td style="max-width:260px">${a.work_done}</td>
+            <td style="max-width:220px">${a.equipment_condition_after}</td>
+            <td>${UI.date(a.accepted_date)}</td>
+            <td>${a.signed_count}/${a.rep_count}</td>
+            <td>${UI.badge(a.status)}</td>
+            <td style="text-align:right; white-space:nowrap">
+              ${a.status !== 'DA_KY' ? `<button class="btn btn--dark" data-sign="${a.id}">Ký</button>` : ''}
+              <button class="btn btn--ghost" data-detail="${a.id}">Chi tiết</button>
+            </td>
+          </tr>`).join('') : '<tr><td colspan="8">Chưa có biên bản nào.</td></tr>';
+      } catch (err) { showToast(err.message); }
+    }
+
+    document.getElementById('rows').addEventListener('click', async (e) => {
+      const sg = e.target.closest('[data-sign]');
+      const dt = e.target.closest('[data-detail]');
+      if (sg) {
+        const name = prompt('Ký với danh nghĩa (họ tên đại diện):', API.user.name);
+        if (!name) return;
+        try {
+          const r = await API.post(`/acceptances/${sg.dataset.sign}/sign`, { fullName: name });
+          showToast(r.message);
+          load();
+        } catch (err) { showToast(err.message); }
+      }
+      if (dt) {
+        try {
+          const r = await API.get('/acceptances/' + dt.dataset.detail);
+          const reps = r.representatives.map((x) => `${x.side === 'A' ? 'Bên A' : 'Bên B'}: ${x.full_name} (${x.organization || '—'}) ${x.signed ? '✓ đã ký' : '— chờ ký'}`).join('\n');
+          alert(`BIÊN BẢN NGHIỆM THU ${r.record.code}\n\nThiết bị: ${r.record.equipment_name || '—'}\n\nBên B đã thực hiện:\n${r.record.work_done}\n\nTình trạng sau thực hiện:\n${r.record.equipment_condition_after}\n\nĐại diện:\n${reps}`);
+        } catch (err) { showToast(err.message); }
+      }
+    });
+
+    document.getElementById('btn-add-rep').addEventListener('click', () => {
+      const row = document.createElement('div');
+      row.className = 'rep-row';
+      row.innerHTML = `
+        <select class="rp-side"><option value="A">Bên A</option><option value="B">Bên B</option></select>
+        <input class="rp-name" placeholder="Họ tên (Ông/Bà)">
+        <input class="rp-org" placeholder="Đơn vị">`;
+      document.getElementById('reps-host').appendChild(row);
+    });
+
+    document.getElementById('acc-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const reps = [...document.querySelectorAll('#reps-host .rep-row')]
+        .map((row) => ({
+          side: row.querySelector('.rp-side').value,
+          fullName: row.querySelector('.rp-name').value.trim(),
+          organization: row.querySelector('.rp-org').value.trim(),
+        }))
+        .filter((r) => r.fullName);
+      try {
+        const res = await API.post('/acceptances', {
+          repairPlanId: document.getElementById('a-repair').value ? Number(document.getElementById('a-repair').value) : undefined,
+          workDone: document.getElementById('a-work').value.trim(),
+          equipmentConditionAfter: document.getElementById('a-cond').value.trim(),
+          acceptedDate: document.getElementById('a-date').value || undefined,
+          representatives: reps,
+        });
+        showToast(res.message);
+        document.querySelector('#modalAdd.is-open').classList.remove('is-open');
+        e.target.reset();
+        load();
+      } catch (err) { showToast(err.message); }
+    });
+
+    if (guardPage()) {
+      load();
+      API.get('/repair-plans').then((r) => {
+        repairPlans = r.data.filter((p) => p.status === 'HOAN_THANH');
+        document.getElementById('a-repair').innerHTML = '<option value="">— Không gắn với sự cố (bảo dưỡng kế hoạch) —</option>' +
+          repairPlans.map((p) => `<option value="${p.id}">#${p.id} — ${p.incident_code} — ${p.equipment_name}</option>`).join('');
+      }).catch(() => {});
+    }
+  </script>
+</body>
+</html>

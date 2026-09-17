@@ -1,0 +1,204 @@
+<mxfile host="app.diagrams.net" modified="2026-09-16T00:00:00.000Z" agent="ET3161-BTL" version="24.0.0">
+  <diagram id="class" name="4. Sơ đồ lớp">
+    <mxGraphModel dx="1700" dy="1150" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1650" pageHeight="1150" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ===== Hàng 1 ===== -->
+        <mxCell id="cls_user" value="NguoiDung" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;" vertex="1" parent="1">
+          <mxGeometry x="40" y="40" width="230" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_user_a" value="- id: int&#10;- tenDangNhap: String&#10;- matKhauBam: String&#10;- hoTen: String&#10;- email: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_user">
+          <mxGeometry y="28" width="230" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_user_m" value="+ dangNhap()&#10;+ doiMatKhau()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_user">
+          <mxGeometry y="98" width="230" height="32" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cls_role" value="VaiTro" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;" vertex="1" parent="1">
+          <mxGeometry x="330" y="40" width="200" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_role_a" value="- id: int&#10;- ma: String&#10;- ten: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_role">
+          <mxGeometry y="28" width="200" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_role_m" value="+ kiemTraQuyen()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_role">
+          <mxGeometry y="80" width="200" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cls_dept" value="DonVi" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;" vertex="1" parent="1">
+          <mxGeometry x="580" y="40" width="200" height="100" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_dept_a" value="- id: int&#10;- ma: String&#10;- ten: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_dept">
+          <mxGeometry y="28" width="200" height="52" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_dept_m" value="" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;html=1;" vertex="1" parent="cls_dept">
+          <mxGeometry y="80" width="200" height="20" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cls_noti" value="ThongBao" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;" vertex="1" parent="1">
+          <mxGeometry x="830" y="40" width="220" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_noti_a" value="- id: int&#10;- tieuDe: String&#10;- noiDung: String&#10;- loai: String&#10;- daDoc: boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_noti">
+          <mxGeometry y="28" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_noti_m" value="+ gui()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_noti">
+          <mxGeometry y="98" width="220" height="32" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cls_audit" value="NhatKyHeThong" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;" vertex="1" parent="1">
+          <mxGeometry x="1100" y="40" width="240" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_audit_a" value="- id: long&#10;- hanhDong: String&#10;- doiTuong: String&#10;- duLieuCu / duLieuMoi: JSON&#10;- thoiGian: DateTime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_audit">
+          <mxGeometry y="28" width="240" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_audit_m" value="+ ghiNhan()  {append-only}" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_audit">
+          <mxGeometry y="98" width="240" height="32" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cls_attach" value="TaiLieuDinhKem" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;" vertex="1" parent="1">
+          <mxGeometry x="1390" y="40" width="220" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_attach_a" value="- id: int&#10;- tenFile: String&#10;- duongDan: String&#10;- loaiDoiTuong: String&#10;- kichThuoc: long" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_attach">
+          <mxGeometry y="28" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_attach_m" value="+ taiLen()&#10;+ taiXuong()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_attach">
+          <mxGeometry y="98" width="220" height="32" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Hàng 2 ===== -->
+        <mxCell id="cls_equip" value="TrangThietBi" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;fillColor=#FFF2CC;" vertex="1" parent="1">
+          <mxGeometry x="180" y="260" width="250" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_equip_a" value="- id: int&#10;- maSo: String  {BM/01}&#10;- ten: String  {BM/01}&#10;- nuocSanXuat: String  {BM/01}&#10;- ngayNhan: Date  {BM/01}&#10;- tinhTrang: TinhTrangTT" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_equip">
+          <mxGeometry y="28" width="250" height="92" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_equip_m" value="+ capNhatTinhTrang()&#10;+ kiemTraNhacBaoDuong()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_equip">
+          <mxGeometry y="120" width="250" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cls_log" value="HoSoThietBi" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;fillColor=#FFF2CC;" vertex="1" parent="1">
+          <mxGeometry x="520" y="260" width="250" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_log_a" value="- id: int&#10;- ngayThucHien: Date  {BM/02}&#10;- noiDung: String  {BM/02}&#10;- nguoiThucHien: String  {BM/02}&#10;- loai: LoaiHoatDong  [mở rộng]&#10;- thietBi: TrangThietBi" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_log">
+          <mxGeometry y="28" width="250" height="92" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_log_m" value="+ themBanGhi()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_log">
+          <mxGeometry y="120" width="250" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cls_incident" value="SuCo" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;" vertex="1" parent="1">
+          <mxGeometry x="860" y="260" width="250" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_incident_a" value="- id: int&#10;- ma: String&#10;- moTa: String&#10;- mucDo: MucDo  [mở rộng]&#10;- phanLoaiXuLy: PhanLoai&#10;- trangThai: TrangThaiSuCo&#10;- ngayBao: DateTime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_incident">
+          <mxGeometry y="28" width="250" height="92" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_incident_m" value="+ baoSuCo()&#10;+ xemXetNguyenNhan()&#10;+ dongSuCo()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_incident">
+          <mxGeometry y="120" width="250" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cls_vendor" value="NhaThau" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;" vertex="1" parent="1">
+          <mxGeometry x="1190" y="260" width="230" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_vendor_a" value="- id: int&#10;- ten: String&#10;- maSoThue: String&#10;- diaChi: String&#10;- nguoiLienHe: String" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_vendor">
+          <mxGeometry y="28" width="230" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_vendor_m" value="" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;html=1;" vertex="1" parent="cls_vendor">
+          <mxGeometry y="98" width="230" height="32" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Hàng 3: kế hoạch & phương án ===== -->
+        <mxCell id="cls_doc" value="«abstract»&#10;TaiLieu" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;fillColor=#E6D0DE;fontStyle=1" vertex="1" parent="1">
+          <mxGeometry x="60" y="560" width="220" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_doc_a" value="# id: int&#10;# ma: String&#10;# ngayLap: Date&#10;# trangThai: TrangThaiDuyet&#10;# nguoiLap: NguoiDung" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_doc">
+          <mxGeometry y="28" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_doc_m" value="+ trinhDuyet()&#10;+ luuVet()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_doc">
+          <mxGeometry y="98" width="220" height="32" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cls_plan" value="KeHoachBaoDuong" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;fillColor=#FFF2CC;" vertex="1" parent="1">
+          <mxGeometry x="360" y="560" width="240" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_plan_a" value="- nam: int  {BM/03}&#10;- trangThai: TrangThaiDuyet&#10;- nguoiDuyet: NguoiDung&#10;- ngayDuyet: DateTime" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_plan">
+          <mxGeometry y="28" width="240" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_plan_m" value="+ trinhDuyet()&#10;+ theoDoiTienDo()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_plan">
+          <mxGeometry y="98" width="240" height="32" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cls_planitem" value="ChiTietKeHoach" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;" vertex="1" parent="1">
+          <mxGeometry x="660" y="560" width="250" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_planitem_a" value="- id: int&#10;- noiDung: String  {BM/03}&#10;- loaiThucHien: NOI_BO | BEN_NGOAI  {BM/03}&#10;- thangDuKien: int  {BM/03}&#10;- ghiChu: String  {BM/03}&#10;- chiPhiDuKien: long  [mở rộng]&#10;- trangThai: TrangThaiTienDo" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_planitem">
+          <mxGeometry y="28" width="250" height="92" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_planitem_m" value="+ capNhatTienDo()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_planitem">
+          <mxGeometry y="120" width="250" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cls_repair" value="PhuongAnSuaChua" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;fillColor=#FFF2CC;" vertex="1" parent="1">
+          <mxGeometry x="980" y="560" width="240" height="130" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_repair_a" value="- id: int&#10;- noiDung: String&#10;- chiPhiDuKien: long  [mở rộng]&#10;- trangThai: TrangThaiDuyet&#10;- nhaThau: NhaThau" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_repair">
+          <mxGeometry y="28" width="240" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_repair_m" value="+ trinhDuyet()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_repair">
+          <mxGeometry y="98" width="240" height="32" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Hàng 4: nghiệm thu ===== -->
+        <mxCell id="cls_accept" value="BienBanNghiemThu" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;fillColor=#FFF2CC;" vertex="1" parent="1">
+          <mxGeometry x="600" y="820" width="260" height="150" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_accept_a" value="- id: int&#10;- ma: String&#10;- noiDungThucHien: String  {BM/04}&#10;- tinhTrangSauThucHien: String  {BM/04}&#10;- ngayLap: Date  {BM/04}&#10;- soBan: int = 2  {BM/04}" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_accept">
+          <mxGeometry y="28" width="260" height="92" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_accept_m" value="+ lap()&#10;+ kyDuyet()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_accept">
+          <mxGeometry y="120" width="260" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="cls_rep" value="DaiDien" style="swimlane;fontStyle=1;align=center;verticalAlign=top;rounded=0;shadow=0;strokeColor=#333333;startSize=28;" vertex="1" parent="1">
+          <mxGeometry x="960" y="840" width="220" height="110" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_rep_a" value="- id: int&#10;- ben: {A, B}  {BM/04}&#10;- hoTen: String  {BM/04}&#10;- donVi: String  {BM/04}&#10;- daKy: boolean" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_rep">
+          <mxGeometry y="28" width="220" height="70" as="geometry"/>
+        </mxCell>
+        <mxCell id="cls_rep_m" value="+ ky()" style="text;strokeColor=none;fillColor=none;align=left;verticalAlign=top;spacingLeft=8;whiteSpace=wrap;html=1;" vertex="1" parent="cls_rep">
+          <mxGeometry y="98" width="220" height="12" as="geometry"/>
+        </mxCell>
+
+        <!-- ===== Quan hệ ===== -->
+        <mxCell id="rel1" value="1" style="endArrow=none;html=1;fontSize=11;" edge="1" parent="1" source="cls_user" target="cls_role"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="rel1m" value="0..*" style="endArrow=none;html=1;fontSize=11;" edge="1" parent="1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="rel_user_dept" value="0..1" style="endArrow=none;html=1;fontSize=11;" edge="1" parent="1" source="cls_user" target="cls_dept"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="rel_noti" value="1" style="endArrow=none;html=1;fontSize=11;" edge="1" parent="1" source="cls_user" target="cls_noti"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="rel_audit" value="1" style="endArrow=none;html=1;dashed=1;fontSize=11;" edge="1" parent="1" source="cls_user" target="cls_audit"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="rel_equip_log" value="1     0..*" style="endArrow=none;html=1;fontSize=11;" edge="1" parent="1" source="cls_equip" target="cls_log"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="rel_equip_dept" value="0..*" style="endArrow=none;html=1;fontSize=11;exitX=0;exitY=0.5;entryX=0.5;entryY=1;" edge="1" parent="1" source="cls_equip" target="cls_dept"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="rel_equip_inc" value="1     0..*" style="endArrow=none;html=1;fontSize=11;" edge="1" parent="1" source="cls_equip" target="cls_incident"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="rel_inc_rep" value="1     0..1" style="endArrow=none;html=1;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="cls_incident" target="cls_repair"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="rel_rep_acc" value="0..1     0..1" style="endArrow=none;html=1;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="cls_repair" target="cls_accept"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="rel_vendor" value="0..1" style="endArrow=none;html=1;fontSize=11;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="cls_repair" target="cls_vendor"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Composition: kế hoạch chứa chi tiết -->
+        <mxCell id="comp1" value="1        1..*" style="endArrow=none;startArrow=diamondThin;startFill=1;html=1;fontSize=11;exitX=0.5;exitY=1;entryX=0.5;entryY=0;" edge="1" parent="1" source="cls_plan" target="cls_planitem"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <!-- Composition: biên bản chứa đại diện -->
+        <mxCell id="comp2" value="1        2..4" style="endArrow=none;startArrow=diamondThin;startFill=1;html=1;fontSize=11;exitX=1;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="cls_accept" target="cls_rep"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Generalization: TaiLieu là cha -->
+        <mxCell id="gen1" value="" style="endArrow=block;endFill=0;html=1;exitX=0.5;exitY=0;entryX=0.5;entryY=1;" edge="1" parent="1" source="cls_plan" target="cls_doc"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="gen2" value="" style="endArrow=block;endFill=0;html=1;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="cls_repair" target="cls_doc"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="gen3" value="" style="endArrow=block;endFill=0;html=1;exitX=0.5;exitY=0;entryX=1;entryY=0.5;" edge="1" parent="1" source="cls_accept" target="cls_doc"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- Ghi chú -->
+        <mxCell id="note1" value="Ghi chú:&#10;— {BM/0x} = trường trích trực tiếp từ biểu mẫu giấy gốc&#10;— [mở rộng] = bổ sung so với quy trình (chi phí, mức độ)&#10;— Quan hệ kế thừa: TaiLieu ← KeHoach / PhuongAn / BienBan&#10;— Quan hệ hợp thành: KeHoach ◆ ChiTiet; BienBan ◆ DaiDien" style="shape=note;whiteSpace=wrap;html=1;size=16;verticalAlign=top;align=left;spacingLeft=8;fontSize=11;fillColor=#FFF9E6;" vertex="1" parent="1">
+          <mxGeometry x="1290" y="560" width="300" height="120" as="geometry"/>
+        </mxCell>
+        <mxCell id="rel_attach" value="gắn với nhiều loại tài liệu" style="endArrow=none;dashed=1;html=1;fontSize=11;exitX=0.5;exitY=1;entryX=1;entryY=0.25;" edge="1" parent="1" source="cls_attach" target="note1"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Người dùng &amp; phân quyền — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <style>.table { font-size: .87rem; } .table th { text-align: left; }</style>
+</head>
+<body>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="topbar-root"></div>
+
+      <main class="page">
+        <div class="page-head">
+          <div>
+            <h1>Người dùng &amp; phân quyền</h1>
+            <p>Phân quyền theo vai trò: Đơn vị sử dụng · Văn phòng Cục · Lãnh đạo Cục · Ban QMS · Nhà thầu ngoài.</p>
+          </div>
+          <button class="btn btn--dark" data-open-modal="modalAdd" id="btn-add">+ Tạo tài khoản</button>
+        </div>
+
+        <section class="panel">
+          <div class="panel__head">
+            <h2 class="panel__title"><span>Danh sách tài khoản</span></h2>
+          </div>
+          <div class="table__wrap">
+            <table class="table">
+              <thead>
+                <tr><th>Tài khoản</th><th>Họ tên</th><th>Vai trò</th><th>Đơn vị</th><th>Email</th><th>Trạng thái</th><th style="text-align:right">Thao tác</th></tr>
+              </thead>
+              <tbody id="rows"><tr><td colspan="7">Đang tải…</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal" id="modalAdd" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+    <div class="modal__overlay" data-close-modal></div>
+    <div class="modal__card">
+      <div class="modal__head">
+        <h3 id="addTitle">Tạo tài khoản</h3>
+        <button class="btn-icon" data-close-modal aria-label="Đóng">✕</button>
+      </div>
+      <form id="user-form">
+        <div class="form-grid">
+          <div class="field"><label for="u-username">Tên đăng nhập *</label><input id="u-username" required></div>
+          <div class="field"><label for="u-password">Mật khẩu *</label><input id="u-password" type="password" required minlength="6"></div>
+          <div class="field"><label for="u-name">Họ tên *</label><input id="u-name" required></div>
+          <div class="field"><label for="u-email">Email</label><input id="u-email" type="email"></div>
+          <div class="field"><label for="u-role">Vai trò *</label>
+            <select id="u-role">
+              <option value="DON_VI">Đơn vị sử dụng</option>
+              <option value="VAN_PHONG_CUC">Văn phòng Cục</option>
+              <option value="LANH_DAO_CUC">Lãnh đạo Cục</option>
+              <option value="QMS">Ban QMS</option>
+              <option value="NHA_THAU">Nhà thầu ngoài</option>
+            </select>
+          </div>
+          <div class="field"><label for="u-dept">Đơn vị</label><select id="u-dept"></select></div>
+        </div>
+        <div class="modal__foot">
+          <button type="button" class="btn btn--light" data-close-modal>Huỷ</button>
+          <button type="submit" class="btn btn--dark">Tạo tài khoản</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status">Đã cập nhật.</div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script>
+    async function load() {
+      try {
+        const res = await API.get('/users');
+        document.getElementById('rows').innerHTML = res.data.map((u) => `
+          <tr>
+            <td><code>${u.username}</code></td>
+            <td><b>${u.full_name}</b></td>
+            <td>${UI.badge(u.role === 'VAN_PHONG_CUC' || u.role === 'LANH_DAO_CUC' ? 'DA_DUYET' : 'CHO_THUC_HIEN')} <small>${u.role_name}</small></td>
+            <td>${u.department_name || '—'}</td>
+            <td>${u.email || '—'}</td>
+            <td>${u.is_active ? '<span class="badge badge--ok">Hoạt động</span>' : '<span class="badge badge--danger">Đã khoá</span>'}</td>
+            <td style="text-align:right; white-space:nowrap">
+              <button class="btn btn--ghost" data-toggle="${u.id}" data-active="${u.is_active}">${u.is_active ? 'Khoá' : 'Mở khoá'}</button>
+            </td>
+          </tr>`).join('');
+      } catch (err) { showToast(err.message); }
+    }
+
+    document.getElementById('rows').addEventListener('click', async (e) => {
+      const t = e.target.closest('[data-toggle]');
+      if (t) {
+        try {
+          await API.patch('/users/' + t.dataset.toggle, { isActive: t.dataset.active !== 'true' });
+          showToast('Đã cập nhật trạng thái tài khoản.');
+          load();
+        } catch (err) { showToast(err.message); }
+      }
+    });
+
+    document.getElementById('user-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        await API.post('/users', {
+          username: document.getElementById('u-username').value.trim(),
+          password: document.getElementById('u-password').value,
+          fullName: document.getElementById('u-name').value.trim(),
+          email: document.getElementById('u-email').value.trim(),
+          role: document.getElementById('u-role').value,
+          departmentId: document.getElementById('u-dept').value || null,
+        });
+        showToast('Đã tạo tài khoản.');
+        document.querySelector('#modalAdd.is-open').classList.remove('is-open');
+        e.target.reset();
+        load();
+      } catch (err) { showToast(err.message); }
+    });
+
+    if (guardPage()) {
+      load();
+      API.get('/departments').then((r) => {
+        document.getElementById('u-dept').innerHTML = '<option value="">— Không gắn đơn vị —</option>' +
+          r.data.map((d) => `<option value="${d.id}">${d.name}</option>`).join('');
+      }).catch(() => {});
+    }
+  </script>
+</body>
+</html>

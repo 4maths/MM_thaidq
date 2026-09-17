@@ -1,0 +1,111 @@
+<mxfile host="app.diagrams.net" modified="2026-09-16T00:00:00.000Z" agent="ET3161-BTL" version="24.0.0">
+  <diagram id="usecase" name="1. Sơ đồ Use Case">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <!-- ============ Ranh giới hệ thống ============ -->
+        <mxCell id="sys" value="Hệ thống Quản lý Trang thiết bị (QT.QLD.09.01)" style="rounded=0;whiteSpace=wrap;html=1;verticalAlign=top;fontSize=14;fontStyle=1;fillColor=none;strokeColor=#333333;" vertex="1" parent="1">
+          <mxGeometry x="220" y="40" width="880" height="800" as="geometry"/>
+        </mxCell>
+
+        <!-- ============ Actors ============ -->
+        <mxCell id="act_donvi" value="Nhân viên&#10;đơn vị sử dụng" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="90" y="220" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="act_vpc" value="Văn phòng Cục&#10;(chuyên viên)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="90" y="480" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="act_lanhdao" value="Lãnh đạo Cục" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="300" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="act_qms" value="Ban QMS /&#10;Lãnh đạo chất lượng" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="470" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="act_nhathau" value="Nhà thầu&#10;bên ngoài" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="1160" y="640" width="40" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="act_timer" value="Bộ nhắc lịch&#10;(hệ thống)" style="shape=umlActor;verticalLabelPosition=bottom;verticalAlign=top;html=1;outlineConnect=0;" vertex="1" parent="1">
+          <mxGeometry x="620" y="880" width="40" height="80" as="geometry"/>
+        </mxCell>
+
+        <!-- ============ Use cases — cột trái ============ -->
+        <mxCell id="uc1" value="Đăng nhập hệ thống" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="70" width="170" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc2" value="Quản lý danh mục&#10;trang thiết bị (BM/01)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="150" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc3" value="Cập nhật hồ sơ&#10;trang thiết bị (BM/02)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="240" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc4" value="Báo sự cố" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="330" width="170" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc5" value="Xem xét, xác định&#10;nguyên nhân sự cố" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="410" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc6" value="Tự khắc phục&#10;sự cố nhỏ" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="500" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc7" value="Lập phương án&#10;sửa chữa / thuê ngoài" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="280" y="590" width="170" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ============ Use cases — cột phải ============ -->
+        <mxCell id="uc8" value="Trình phê duyệt" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="70" width="170" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc9" value="Phê duyệt phương án&#10;sửa chữa" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="150" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc10" value="Lập kế hoạch bảo dưỡng,&#10;thay thế năm (BM/03)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="240" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc11" value="Phê duyệt kế hoạch&#10;bảo dưỡng năm" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="330" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc12" value="Thực hiện bảo dưỡng /&#10;sửa chữa (nội bộ, thuê ngoài)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="420" width="180" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc13" value="Lập biên bản nghiệm thu&#10;(BM/04)" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="510" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc14" value="Xem báo cáo&#10;&amp; thống kê" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="600" width="170" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="uc15" value="Nhắc lịch bảo dưỡng&#10;định kỳ đến hạn" style="ellipse;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="600" y="700" width="170" height="60" as="geometry"/>
+        </mxCell>
+
+        <!-- ============ Quan hệ Actor — Use case ============ -->
+        <mxCell id="r1" style="endArrow=none;html=1;" edge="1" parent="1" source="act_donvi" target="uc1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r2" style="endArrow=none;html=1;" edge="1" parent="1" source="act_donvi" target="uc3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r3" style="endArrow=none;html=1;" edge="1" parent="1" source="act_donvi" target="uc4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r4" style="endArrow=none;html=1;" edge="1" parent="1" source="act_donvi" target="uc6"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r5" style="endArrow=none;html=1;" edge="1" parent="1" source="act_vpc" target="uc1"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r6" style="endArrow=none;html=1;" edge="1" parent="1" source="act_vpc" target="uc2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r7" style="endArrow=none;html=1;" edge="1" parent="1" source="act_vpc" target="uc5"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r8" style="endArrow=none;html=1;" edge="1" parent="1" source="act_vpc" target="uc7"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r9" style="endArrow=none;html=1;" edge="1" parent="1" source="act_vpc" target="uc10"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r10" style="endArrow=none;html=1;" edge="1" parent="1" source="act_vpc" target="uc12"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r11" style="endArrow=none;html=1;" edge="1" parent="1" source="act_vpc" target="uc13"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r12" style="endArrow=none;html=1;" edge="1" parent="1" source="act_lanhdao" target="uc9"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r13" style="endArrow=none;html=1;" edge="1" parent="1" source="act_lanhdao" target="uc11"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r14" style="endArrow=none;html=1;" edge="1" parent="1" source="act_qms" target="uc14"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r15" style="endArrow=none;html=1;" edge="1" parent="1" source="act_nhathau" target="uc12"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r16" style="endArrow=none;html=1;" edge="1" parent="1" source="act_nhathau" target="uc13"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="r17" style="endArrow=none;html=1;" edge="1" parent="1" source="act_timer" target="uc15"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <!-- ============ include / extend ============ -->
+        <mxCell id="inc1" value="«include»" style="endArrow=open;dashed=1;html=1;fontSize=11;" edge="1" parent="1" source="uc7" target="uc8"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="inc2" value="«include»" style="endArrow=open;dashed=1;html=1;fontSize=11;" edge="1" parent="1" source="uc10" target="uc8"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ext1" value="«extend»&#10;{sự cố nhỏ}" style="endArrow=open;dashed=1;html=1;fontSize=11;" edge="1" parent="1" source="uc6" target="uc5"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ext2" value="«extend»&#10;{thuê ngoài}" style="endArrow=open;dashed=1;html=1;fontSize=11;" edge="1" parent="1" source="uc13" target="uc12"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="ext3" value="«extend»&#10;{sau nghiệm thu / khắc phục}" style="endArrow=open;dashed=1;html=1;fontSize=11;" edge="1" parent="1" source="uc13" target="uc3"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

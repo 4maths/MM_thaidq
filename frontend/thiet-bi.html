@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Danh mục trang thiết bị — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .toolbar { display: flex; flex-wrap: wrap; gap: 10px; align-items: center; margin: 18px 0; }
+    .table-wrap { overflow-x: auto; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; }
+    table.tbl { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 720px; }
+    table.tbl th { text-align: left; padding: 12px 14px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); }
+    table.tbl td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.06); }
+    table.tbl tr:last-child td { border-bottom: none; }
+    table.tbl tbody tr:hover { background: rgba(174,141,60,.08); cursor: pointer; }
+    .empty { padding: 40px; text-align: center; opacity: .65; }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <nav class="topbar__links"><a href="index.html">Quy trình QT.QLD.09.01</a></nav>
+      <div class="topbar__lang"><span style="opacity:.7">BM.QLD.09.01/01</span></div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html">
+        <svg class="brand__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <circle cx="24" cy="24" r="21" stroke="currentColor" stroke-width="2"/>
+          <path d="M15 33 24 12l9 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18.5 26h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand__text">
+          <span class="brand__name">QUẢN LÝ TRANG THIẾT BỊ</span>
+          <span class="brand__org">Cục Quản lý Dược · Bộ Y tế</span>
+        </span>
+      </a>
+      <nav class="main-nav" aria-label="Menu chính">
+        <a href="index.html">Trang chủ</a>
+        <a href="thiet-bi.html" class="is-active">Tra cứu thiết bị</a>
+        <a href="bao-su-co.html">Báo sự cố</a>
+        <a href="su-co-cua-toi.html">Sự cố của đơn vị</a>
+        <a href="ke-hoach.html">Kế hoạch bảo dưỡng</a>
+      </nav>
+      <div class="header-actions">
+        <a class="login-link" href="dang-nhap.html" data-role="login-link">Đăng nhập</a>
+        <button class="nav-toggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container page-head">
+      <nav class="breadcrumb" aria-label="Vị trí trang">
+        <a href="index.html">Trang chủ</a><span>/</span>Danh mục trang thiết bị
+      </nav>
+      <h1>Danh mục trang thiết bị</h1>
+      <p class="page-head__desc">Số hóa biểu mẫu BM.QLD.09.01/01 — tra cứu thiết bị theo tên, mã số, đơn vị sử dụng và tình trạng.</p>
+    </div>
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <form class="toolbar" id="filter-form" role="search">
+          <input class="header-search" style="flex:1; min-width:220px;" type="search" name="q" id="q"
+                 placeholder="Tên hoặc mã thiết bị, ví dụ: photocopy, TT-2021-001…" aria-label="Tìm thiết bị">
+          <select class="header-search" id="status" style="width:auto;" aria-label="Lọc theo tình trạng">
+            <option value="">— Tình trạng —</option>
+            <option value="HOAT_DONG">Hoạt động</option>
+            <option value="SU_CO">Sự cố</option>
+            <option value="DANG_SUA">Đang sửa chữa</option>
+            <option value="DANG_BAO_DUONG">Đang bảo dưỡng</option>
+            <option value="NGUNG_SU_DUNG">Ngừng sử dụng</option>
+          </select>
+          <button class="btn-gold" type="submit">Tìm</button>
+        </form>
+
+        <div class="table-wrap">
+          <table class="tbl" aria-label="Danh sách trang thiết bị">
+            <thead>
+              <tr>
+                <th style="width:52px">STT</th>
+                <th>Tên trang thiết bị</th>
+                <th>Mã số</th>
+                <th>Nước sản xuất</th>
+                <th>Ngày nhận</th>
+                <th>Đơn vị sử dụng</th>
+                <th>Tình trạng</th>
+              </tr>
+            </thead>
+            <tbody id="rows">
+              <tr><td colspan="7" class="empty">Đang tải dữ liệu…</td></tr>
+            </tbody>
+          </table>
+        </div>
+        <p id="total-line" style="margin-top:12px; opacity:.7; font-size:14px;"></p>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>© <span data-role="year">2026</span> Cục Quản lý Dược – Bộ Y tế.</span>
+      <span>QT.QLD.09.01</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/api.js?v=2"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    const params = new URLSearchParams(location.search);
+    document.getElementById('q').value = params.get('q') || '';
+    document.getElementById('status').value = params.get('status') || '';
+
+    async function load() {
+      const tbody = document.getElementById('rows');
+      tbody.innerHTML = '<tr><td colspan="7" class="empty">Đang tải dữ liệu…</td></tr>';
+      try {
+        const qs = new URLSearchParams();
+        if (params.get('q')) qs.set('q', params.get('q'));
+        if (params.get('status')) qs.set('status', params.get('status'));
+        qs.set('pageSize', '100');
+        const res = await API.get('/equipment?' + qs);
+        if (!res.data.length) {
+          tbody.innerHTML = '<tr><td colspan="7" class="empty">Không có trang thiết bị nào khớp tìm kiếm.</td></tr>';
+          document.getElementById('total-line').textContent = '';
+          return;
+        }
+        tbody.innerHTML = res.data.map((e, i) => `
+          <tr onclick="location.href='chi-tiet-thiet-bi.html?id=${e.id}'">
+            <td>${i + 1}</td>
+            <td><strong>${e.name}</strong>${e.model ? `<br><small style="opacity:.6">${e.model}</small>` : ''}</td>
+            <td><code>${e.code}</code></td>
+            <td>${e.country_of_origin || '—'}</td>
+            <td>${UI.fmtDate(e.received_date)}</td>
+            <td>${e.department_name || '—'}</td>
+            <td>${UI.statusBadge(e.status)}${e.open_incidents > 0 ? ` <small style="color:#ff9c9c">+${e.open_incidents} sự cố</small>` : ''}</td>
+          </tr>`).join('');
+        document.getElementById('total-line').textContent = `Tổng cộng: ${res.total} trang thiết bị.`;
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="7" class="empty">${err.message} — nếu chưa đăng nhập, hãy <a href="dang-nhap.html" style="color:#6FA7B4">đăng nhập</a>.</td></tr>`;
+      }
+    }
+    document.getElementById('filter-form').addEventListener('submit', (e) => {
+      e.preventDefault();
+      const qs = new URLSearchParams();
+      if (document.getElementById('q').value) qs.set('q', document.getElementById('q').value);
+      if (document.getElementById('status').value) qs.set('status', document.getElementById('status').value);
+      location.search = qs.toString();
+    });
+    load();
+  </script>
+</body>
+</html>

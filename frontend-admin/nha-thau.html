@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nhà thầu ngoài — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <style>.table { font-size: .87rem; } .table th { text-align: left; }</style>
+</head>
+<body>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="topbar-root"></div>
+
+      <main class="page">
+        <div class="page-head">
+          <div>
+            <h1>Nhà thầu bên ngoài</h1>
+            <p>Danh mục đơn vị thực hiện bảo dưỡng, sửa chữa thuê ngoài (mở rộng so với quy trình gốc).</p>
+          </div>
+          <button class="btn btn--dark" data-open-modal="modalAdd" id="btn-add">+ Thêm nhà thầu</button>
+        </div>
+
+        <section class="panel">
+          <div class="panel__head">
+            <h2 class="panel__title"><span>Danh sách nhà thầu</span></h2>
+          </div>
+          <div class="table__wrap">
+            <table class="table">
+              <thead>
+                <tr><th>Tên công ty</th><th>Mã số thuế</th><th>Địa chỉ</th><th>Điện thoại</th><th>Người liên hệ</th><th>Email</th></tr>
+              </thead>
+              <tbody id="rows"><tr><td colspan="6">Đang tải…</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="modal" id="modalAdd" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+    <div class="modal__overlay" data-close-modal></div>
+    <div class="modal__card">
+      <div class="modal__head">
+        <h3 id="addTitle">Thêm nhà thầu</h3>
+        <button class="btn-icon" data-close-modal aria-label="Đóng">✕</button>
+      </div>
+      <form id="vendor-form">
+        <div class="form-grid">
+          <div class="field"><label for="v-name">Tên công ty *</label><input id="v-name" required></div>
+          <div class="field"><label for="v-tax">Mã số thuế</label><input id="v-tax"></div>
+          <div class="field"><label for="v-addr">Địa chỉ</label><input id="v-addr"></div>
+          <div class="field"><label for="v-phone">Điện thoại</label><input id="v-phone"></div>
+          <div class="field"><label for="v-email">Email</label><input id="v-email" type="email"></div>
+          <div class="field"><label for="v-contact">Người liên hệ</label><input id="v-contact"></div>
+        </div>
+        <div class="modal__foot">
+          <button type="button" class="btn btn--light" data-close-modal>Huỷ</button>
+          <button type="submit" class="btn btn--dark">Lưu nhà thầu</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status">Đã cập nhật.</div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script>
+    async function load() {
+      try {
+        const res = await API.get('/vendors');
+        document.getElementById('rows').innerHTML = res.data.length ? res.data.map((v) => `
+          <tr>
+            <td><b>${v.name}</b></td>
+            <td>${v.tax_code || '—'}</td>
+            <td>${v.address || '—'}</td>
+            <td>${v.phone || '—'}</td>
+            <td>${v.contact_person || '—'}</td>
+            <td>${v.email || '—'}</td>
+          </tr>`).join('') : '<tr><td colspan="6">Chưa có nhà thầu nào.</td></tr>';
+      } catch (err) { showToast(err.message); }
+    }
+
+    document.getElementById('vendor-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        await API.post('/vendors', {
+          name: document.getElementById('v-name').value.trim(),
+          taxCode: document.getElementById('v-tax').value.trim(),
+          address: document.getElementById('v-addr').value.trim(),
+          phone: document.getElementById('v-phone').value.trim(),
+          email: document.getElementById('v-email').value.trim(),
+          contactPerson: document.getElementById('v-contact').value.trim(),
+        });
+        showToast('Đã thêm nhà thầu.');
+        document.querySelector('#modalAdd.is-open').classList.remove('is-open');
+        e.target.reset();
+        load();
+      } catch (err) { showToast(err.message); }
+    });
+
+    if (guardPage()) load();
+  </script>
+</body>
+</html>

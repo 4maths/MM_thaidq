@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Phương án sửa chữa — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <style>.table { font-size: .86rem; } .table th { text-align: left; }</style>
+</head>
+<body>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="topbar-root"></div>
+
+      <main class="page">
+        <div class="page-head">
+          <div>
+            <h1>Phương án sửa chữa</h1>
+            <p>Văn phòng Cục lập phương án — Lãnh đạo Cục phê duyệt (mục 6.2.3b). Sau khi sửa xong: báo hoàn thành để nghiệm thu.</p>
+          </div>
+        </div>
+
+        <section class="panel">
+          <div class="panel__head">
+            <h2 class="panel__title"><span>Danh sách phương án</span></h2>
+          </div>
+          <div class="table__wrap">
+            <table class="table">
+              <thead>
+                <tr><th>ID</th><th>Sự cố</th><th>Thiết bị</th><th>Nội dung</th><th>Nhà thầu</th><th>Chi phí dự kiến</th><th>Trạng thái</th><th style="text-align:right">Thao tác</th></tr>
+              </thead>
+              <tbody id="rows"><tr><td colspan="8">Đang tải…</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status">Đã cập nhật.</div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script>
+    async function load() {
+      try {
+        const res = await API.get('/repair-plans');
+        const rows = document.getElementById('rows');
+        if (!res.data.length) { rows.innerHTML = '<tr><td colspan="8">Chưa có phương án nào.</td></tr>'; return; }
+        const isLD = API.user.role === 'LANH_DAO_CUC';
+        const isVPC = API.user.role === 'VAN_PHONG_CUC';
+        rows.innerHTML = res.data.map((p) => `
+          <tr>
+            <td>#${p.id}</td>
+            <td><code>${p.incident_code}</code></td>
+            <td>${p.equipment_name}</td>
+            <td style="max-width:280px">${p.content}</td>
+            <td>${p.vendor_name || 'Nội bộ'}</td>
+            <td>${UI.money(p.estimated_cost)}</td>
+            <td>${UI.badge(p.status)}</td>
+            <td style="text-align:right; white-space:nowrap">
+              ${isLD && p.status === 'CHO_DUYET' ? `
+                <button class="btn btn--dark" data-approve="${p.id}">Phê duyệt</button>
+                <button class="btn btn--danger" data-reject="${p.id}">Từ chối</button>` : ''}
+              ${isVPC && (p.status === 'DA_DUYET' || p.status === 'DANG_THUC_HIEN') ? `
+                <button class="btn btn--dark" data-complete="${p.id}">Báo hoàn thành</button>` : ''}
+              ${p.status === 'HOAN_THANH' ? `<a class="btn btn--ghost" href="nghiem-thu.html">Nghiệm thu</a>` : ''}
+            </td>
+          </tr>`).join('');
+      } catch (err) { showToast(err.message); }
+    }
+
+    document.getElementById('rows').addEventListener('click', async (e) => {
+      const ap = e.target.closest('[data-approve]');
+      const rj = e.target.closest('[data-reject]');
+      const cp = e.target.closest('[data-complete]');
+      try {
+        if (ap) {
+          const note = prompt('Ghi chú phê duyệt (tuỳ chọn):') ?? '';
+          const r = await API.post(`/repair-plans/${ap.dataset.approve}/approve`, { note });
+          showToast(r.message);
+          load();
+        } else if (rj) {
+          const note = prompt('Lý do từ chối (bắt buộc):');
+          if (!note) return;
+          const r = await API.post(`/repair-plans/${rj.dataset.reject}/reject`, { note });
+          showToast(r.message);
+          load();
+        } else if (cp) {
+          const r = await API.post(`/repair-plans/${cp.dataset.complete}/complete`);
+          showToast(r.message);
+          load();
+        }
+      } catch (err) { showToast(err.message); }
+    });
+
+    if (guardPage()) load();
+  </script>
+</body>
+</html>

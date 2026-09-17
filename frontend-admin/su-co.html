@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Xử lý sự cố — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <style>.table { font-size: .86rem; } .table th { text-align: left; }</style>
+</head>
+<body>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="topbar-root"></div>
+
+      <main class="page">
+        <div class="page-head">
+          <div>
+            <h1>Xử lý sự cố trang thiết bị</h1>
+            <p>Mục 6.2.3b — Văn phòng Cục kiểm tra nguyên nhân và phân loại: sự cố nhỏ (tự khắc phục) hoặc lập phương án sửa chữa.</p>
+          </div>
+        </div>
+
+        <section class="panel">
+          <div class="panel__head">
+            <h2 class="panel__title"><span>Danh sách sự cố <span class="panel__sub" id="total-line"></span></span></h2>
+            <div class="panel__actions">
+              <select id="status" class="chip chip--outline">
+                <option value="">— Tất cả trạng thái —</option>
+                <option value="MOI">Mới</option>
+                <option value="DANG_XEM_XET">Đang xem xét</option>
+                <option value="CHO_DUYET">Chờ phê duyệt</option>
+                <option value="DANG_SUA">Đang sửa chữa</option>
+                <option value="CHO_NGHIEM_THU">Chờ nghiệm thu</option>
+                <option value="DONG">Đóng</option>
+              </select>
+            </div>
+          </div>
+          <div class="table__wrap">
+            <table class="table">
+              <thead>
+                <tr><th>Mã</th><th>Thiết bị</th><th>Mô tả</th><th>Mức độ</th><th>Cách xử lý</th><th>Trạng thái</th><th>Người báo</th><th style="text-align:right">Thao tác</th></tr>
+              </thead>
+              <tbody id="rows"><tr><td colspan="8">Đang tải…</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal xem xét sự cố -->
+  <div class="modal" id="modalReview" role="dialog" aria-modal="true" aria-labelledby="reviewTitle">
+    <div class="modal__overlay" data-close-modal></div>
+    <div class="modal__card">
+      <div class="modal__head">
+        <h3 id="reviewTitle">Xem xét, xác định nguyên nhân</h3>
+        <button class="btn-icon" data-close-modal aria-label="Đóng">✕</button>
+      </div>
+      <form id="review-form">
+        <input type="hidden" id="r-id">
+        <p id="r-desc" style="color:#8B8E99; font-size:.88rem; margin-bottom:1rem;"></p>
+        <div class="form-grid">
+          <div class="field"><label for="r-severity">Mức độ</label>
+            <select id="r-severity">
+              <option value="NHO">Sự cố nhỏ</option>
+              <option value="NGUY_CO">Nguy cơ sự cố</option>
+              <option value="LON">Sự cố lớn</option>
+            </select>
+          </div>
+          <div class="field"><label for="r-resolution">Phân loại xử lý</label>
+            <select id="r-resolution">
+              <option value="TU_KHAC_PHUC">Tự khắc phục (không cần phê duyệt)</option>
+              <option value="NOI_BO">Sửa chữa nội bộ</option>
+              <option value="THUE_NGOAI">Thuê ngoài — cần lập phương án</option>
+            </select>
+          </div>
+        </div>
+        <div class="field"><label for="r-note">Ghi chú nguyên nhân</label><input id="r-note" placeholder="Nguyên nhân xác định, hướng xử lý…"></div>
+        <div class="modal__foot">
+          <button type="button" class="btn btn--light" data-close-modal>Huỷ</button>
+          <button type="submit" class="btn btn--dark">Xác nhận xem xét</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal lập phương án nhanh -->
+  <div class="modal" id="modalPlan" role="dialog" aria-modal="true" aria-labelledby="planTitle">
+    <div class="modal__overlay" data-close-modal></div>
+    <div class="modal__card">
+      <div class="modal__head">
+        <h3 id="planTitle">Lập phương án sửa chữa</h3>
+        <button class="btn-icon" data-close-modal aria-label="Đóng">✕</button>
+      </div>
+      <form id="plan-form">
+        <input type="hidden" id="p-incident">
+        <div class="field"><label for="p-content">Nội dung phương án *</label>
+          <textarea id="p-content" required style="width:100%; min-height:90px; border:1.5px solid #E5E4F0; border-radius:10px; padding:10px; font:inherit;" placeholder="Cách khắc phục, thiết bị/vật tư cần thay, thời gian dự kiến…"></textarea>
+        </div>
+        <div class="form-grid">
+          <div class="field"><label for="p-vendor">Nhà thầu đề xuất</label><select id="p-vendor"></select></div>
+          <div class="field"><label for="p-cost">Chi phí dự kiến (đ)</label><input id="p-cost" type="number" min="0" placeholder="4200000"></div>
+        </div>
+        <div class="modal__foot">
+          <button type="button" class="btn btn--light" data-close-modal>Huỷ</button>
+          <button type="submit" class="btn btn--dark">Lập phương án &amp; trình duyệt</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status">Đã cập nhật.</div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script>
+    let vendors = [];
+
+    async function load() {
+      try {
+        const qs = new URLSearchParams({ pageSize: 50 });
+        if (document.getElementById('status').value) qs.set('status', document.getElementById('status').value);
+        const res = await API.get('/incidents?' + qs);
+        document.getElementById('total-line').textContent = `— tổng ${res.total} sự cố`;
+        document.getElementById('rows').innerHTML = res.data.map((i) => `
+          <tr>
+            <td><code>${i.code}</code></td>
+            <td><b>${i.equipment_name}</b><br><small style="color:#8B8E99">${i.equipment_code}</small></td>
+            <td style="max-width:260px">${i.description}</td>
+            <td>${i.severity === 'NHO' ? 'Nhỏ' : i.severity === 'LON' ? 'Lớn' : 'Nguy cơ'}</td>
+            <td>${UI.badge(i.resolution_type)}</td>
+            <td>${UI.badge(i.status)}</td>
+            <td>${i.reported_by_name || '—'}</td>
+            <td style="text-align:right; white-space:nowrap">
+              ${i.status === 'MOI' ? `<button class="btn btn--dark" data-review="${i.id}" data-desc="${i.description.replace(/"/g, '&quot;')}">Xem xét</button>` : ''}
+              ${i.status === 'DANG_XEM_XET' && (i.resolution_type === 'THUE_NGOAI' || i.resolution_type === 'NOI_BO') ? `<button class="btn btn--dark" data-plan="${i.id}">Lập phương án</button>` : ''}
+              ${i.repair_plan_id ? `<a class="btn btn--ghost" href="phuong-an.html">Phương án</a>` : ''}
+            </td>
+          </tr>`).join('');
+      } catch (err) { showToast(err.message); }
+    }
+
+    document.getElementById('status').addEventListener('change', load);
+
+    document.getElementById('rows').addEventListener('click', (e) => {
+      const rv = e.target.closest('[data-review]');
+      if (rv) {
+        document.getElementById('r-id').value = rv.dataset.review;
+        document.getElementById('r-desc').textContent = 'Mô tả: ' + rv.dataset.desc;
+        document.getElementById('modalReview').classList.add('is-open');
+        return;
+      }
+      const pl = e.target.closest('[data-plan]');
+      if (pl) {
+        document.getElementById('p-incident').value = pl.dataset.plan;
+        document.getElementById('modalPlan').classList.add('is-open');
+      }
+    });
+
+    document.getElementById('review-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        const res = await API.post(`/incidents/${document.getElementById('r-id').value}/review`, {
+          severity: document.getElementById('r-severity').value,
+          resolutionType: document.getElementById('r-resolution').value,
+          note: document.getElementById('r-note').value.trim(),
+        });
+        showToast('Đã xác nhận: ' + res.incident.resolution_type);
+        document.querySelector('#modalReview.is-open').classList.remove('is-open');
+        load();
+      } catch (err) { showToast(err.message); }
+    });
+
+    document.getElementById('plan-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      try {
+        await API.post('/repair-plans', {
+          incidentId: Number(document.getElementById('p-incident').value),
+          content: document.getElementById('p-content').value.trim(),
+          vendorId: document.getElementById('p-vendor').value || null,
+          estimatedCost: document.getElementById('p-cost').value || null,
+        });
+        showToast('Đã lập phương án — chờ Lãnh đạo Cục phê duyệt.');
+        document.querySelector('#modalPlan.is-open').classList.remove('is-open');
+        load();
+      } catch (err) { showToast(err.message); }
+    });
+
+    if (guardPage()) {
+      load();
+      API.get('/vendors').then((r) => {
+        vendors = r.data;
+        document.getElementById('p-vendor').innerHTML = '<option value="">— Sửa chữa nội bộ —</option>' +
+          vendors.map((v) => `<option value="${v.id}">${v.name}</option>`).join('');
+      }).catch(() => {});
+    }
+  </script>
+</body>
+</html>

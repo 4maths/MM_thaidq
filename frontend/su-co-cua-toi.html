@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sự cố của đơn vị — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .table-wrap { overflow-x: auto; border: 1px solid rgba(255,255,255,.08); border-radius: 14px; }
+    table.tbl { width: 100%; border-collapse: collapse; font-size: 14.5px; min-width: 760px; }
+    table.tbl th { text-align: left; padding: 12px 14px; font-weight: 600; border-bottom: 1px solid rgba(255,255,255,.12); background: rgba(255,255,255,.03); }
+    table.tbl td { padding: 12px 14px; border-bottom: 1px solid rgba(255,255,255,.06); }
+    .empty { padding: 40px; text-align: center; opacity: .65; }
+    .resolve-card { max-width: 560px; background: rgba(255,255,255,.05); border: 1px solid rgba(174,141,60,.4); border-radius: 16px; padding: 22px; margin-top: 22px; display: none; }
+    .resolve-card textarea { width: 100%; min-height: 90px; border-radius: 10px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05); color: inherit; font: inherit; padding: 10px 12px; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html">
+        <svg class="brand__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <circle cx="24" cy="24" r="21" stroke="currentColor" stroke-width="2"/>
+          <path d="M15 33 24 12l9 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18.5 26h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand__text">
+          <span class="brand__name">QUẢN LÝ TRANG THIẾT BỊ</span>
+          <span class="brand__org">Cục Quản lý Dược · Bộ Y tế</span>
+        </span>
+      </a>
+      <nav class="main-nav" aria-label="Menu chính">
+        <a href="index.html">Trang chủ</a>
+        <a href="thiet-bi.html">Tra cứu thiết bị</a>
+        <a href="bao-su-co.html">Báo sự cố</a>
+        <a href="su-co-cua-toi.html" class="is-active">Sự cố của đơn vị</a>
+        <a href="ke-hoach.html">Kế hoạch bảo dưỡng</a>
+      </nav>
+      <div class="header-actions">
+        <a class="login-link" href="dang-nhap.html" data-role="login-link">Đăng nhập</a>
+        <button class="nav-toggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container page-head">
+      <nav class="breadcrumb" aria-label="Vị trí trang">
+        <a href="index.html">Trang chủ</a><span>/</span>Sự cố của đơn vị
+      </nav>
+      <h1>Theo dõi sự cố</h1>
+      <p class="page-head__desc">Trạng thái xử lý các sự cố đơn vị bạn đã báo. Sự cố nhỏ được Văn phòng Cục chuyển về "tự khắc phục" — bạn cập nhật kết quả ngay tại đây.</p>
+    </div>
+
+    <section class="section" style="padding-top:0">
+      <div class="container">
+        <div class="table-wrap">
+          <table class="tbl" aria-label="Danh sách sự cố">
+            <thead>
+              <tr>
+                <th>Mã</th><th>Thiết bị</th><th>Mô tả</th><th>Mức độ</th><th>Cách xử lý</th><th>Trạng thái</th><th>Ngày báo</th><th></th>
+              </tr>
+            </thead>
+            <tbody id="rows"><tr><td colspan="8" class="empty">Đang tải…</td></tr></tbody>
+          </table>
+        </div>
+
+        <div class="resolve-card" id="resolve-card">
+          <h3 style="margin-bottom:6px;">Tự khắc phục sự cố <span id="resolve-code" style="color:#AE8D3C"></span></h3>
+          <p style="font-size:13.5px; opacity:.7; margin-bottom:14px;">Theo mục 6.2.3b — sự cố nhỏ: đơn vị khắc phục và cập nhật hồ sơ thiết bị (không cần phê duyệt).</p>
+          <textarea id="resolve-content" placeholder="Nội dung khắc phục, ví dụ: thay adapter, vệ sinh cụm kéo giấy…"></textarea>
+          <div style="margin-top:12px; display:flex; gap:10px;">
+            <button class="btn-gold" id="resolve-submit" style="padding:10px 22px;">Ghi hồ sơ &amp; đóng sự cố</button>
+            <button class="btn-outline" id="resolve-cancel" style="padding:10px 22px;">Đóng khung</button>
+          </div>
+          <p id="resolve-msg" style="margin-top:10px; font-size:14px;"></p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>© <span data-role="year">2026</span> Cục Quản lý Dược – Bộ Y tế.</span>
+      <span>QT.QLD.09.01</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/api.js?v=2"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    let currentResolveId = null;
+
+    async function load() {
+      const tbody = document.getElementById('rows');
+      try {
+        const res = await API.get('/incidents?pageSize=50');
+        if (!res.data.length) {
+          tbody.innerHTML = '<tr><td colspan="8" class="empty">Đơn vị chưa báo sự cố nào.</td></tr>';
+          return;
+        }
+        tbody.innerHTML = res.data.map((i) => `
+          <tr>
+            <td><code>${i.code}</code></td>
+            <td>${i.equipment_name}</td>
+            <td style="max-width:280px">${i.description}</td>
+            <td>${i.severity === 'NHO' ? 'Nhỏ' : i.severity === 'LON' ? 'Lớn' : 'Nguy cơ'}</td>
+            <td>${UI.statusBadge(i.resolution_type)}</td>
+            <td>${UI.statusBadge(i.status)}</td>
+            <td>${UI.fmtDate(i.reported_at)}</td>
+            <td>${i.status === 'DANG_XEM_XET' && i.resolution_type === 'TU_KHAC_PHUC'
+                  ? `<button class="btn-gold" style="padding:7px 14px; font-size:13px;" onclick="openResolve(${i.id}, '${i.code}')">Tự khắc phục</button>` : ''}</td>
+          </tr>`).join('');
+      } catch (err) {
+        tbody.innerHTML = `<tr><td colspan="8" class="empty">${err.message}</td></tr>`;
+      }
+    }
+
+    function openResolve(id, code) {
+      currentResolveId = id;
+      document.getElementById('resolve-code').textContent = code;
+      document.getElementById('resolve-card').style.display = 'block';
+      document.getElementById('resolve-card').scrollIntoView({ behavior: 'smooth' });
+    }
+    document.getElementById('resolve-cancel').addEventListener('click', () => {
+      document.getElementById('resolve-card').style.display = 'none';
+    });
+    document.getElementById('resolve-submit').addEventListener('click', async () => {
+      const msg = document.getElementById('resolve-msg');
+      try {
+        const res = await API.post(`/incidents/${currentResolveId}/self-resolve`, {
+          content: document.getElementById('resolve-content').value.trim(),
+        });
+        msg.style.color = '#7fd4a2';
+        msg.textContent = res.message;
+        setTimeout(() => { document.getElementById('resolve-card').style.display = 'none'; load(); }, 1200);
+      } catch (err) {
+        msg.style.color = '#ff9c9c';
+        msg.textContent = err.message;
+      }
+    });
+
+    if (requireLogin()) load();
+  </script>
+</body>
+</html>

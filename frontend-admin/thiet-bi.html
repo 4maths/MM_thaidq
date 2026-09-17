@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Danh mục thiết bị — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <style>
+    .table { font-size: .87rem; } .table th { text-align: left; } 
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="topbar-root"></div>
+
+      <main class="page">
+        <div class="page-head">
+          <div>
+            <h1>Danh mục trang thiết bị</h1>
+            <p>Số hóa BM.QLD.09.01/01 — Văn phòng Cục quản lý danh mục tổng toàn Cục.</p>
+          </div>
+          <div style="display:flex; gap:.6rem;">
+            <a class="btn btn--light" href="/api/v1/equipment/export.xlsx" download>Xuất Excel (BM/01)</a>
+            <button class="btn btn--dark" data-open-modal="modalAdd" id="btn-add">+ Thêm thiết bị</button>
+          </div>
+        </div>
+
+        <section class="panel">
+          <div class="panel__head">
+            <h2 class="panel__title"><span>Danh sách thiết bị <span class="panel__sub" id="total-line"></span></span></h2>
+            <div class="panel__actions">
+              <input type="search" id="q" class="chip chip--outline" style="min-width:220px" placeholder="Tìm tên / mã số…">
+              <select id="status" class="chip chip--outline">
+                <option value="">— Tình trạng —</option>
+                <option value="HOAT_DONG">Hoạt động</option>
+                <option value="SU_CO">Sự cố</option>
+                <option value="DANG_SUA">Đang sửa chữa</option>
+                <option value="DANG_BAO_DUONG">Đang bảo dưỡng</option>
+                <option value="NGUNG_SU_DUNG">Ngừng sử dụng</option>
+              </select>
+            </div>
+          </div>
+          <div class="table__wrap">
+            <table class="table">
+              <thead>
+                <tr><th>STT</th><th>Tên trang thiết bị</th><th>Mã số</th><th>Nước SX</th><th>Ngày nhận</th><th>Đơn vị sử dụng</th><th>Tình trạng</th><th style="text-align:right">Thao tác</th></tr>
+              </thead>
+              <tbody id="rows"><tr><td colspan="8">Đang tải…</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal thêm / sửa thiết bị -->
+  <div class="modal" id="modalAdd" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal__overlay" data-close-modal></div>
+    <div class="modal__card">
+      <div class="modal__head">
+        <h3 id="modalTitle">Thêm trang thiết bị</h3>
+        <button class="btn-icon" data-close-modal aria-label="Đóng">✕</button>
+      </div>
+      <form id="equip-form">
+        <input type="hidden" id="f-id">
+        <div class="form-grid">
+          <div class="field"><label for="f-code">Mã số *</label><input id="f-code" required placeholder="TT-2026-001"></div>
+          <div class="field"><label for="f-name">Tên trang thiết bị *</label><input id="f-name" required placeholder="Máy photocopy Ricoh…"></div>
+          <div class="field"><label for="f-country">Nước sản xuất</label><input id="f-country" placeholder="Nhật Bản"></div>
+          <div class="field"><label for="f-received">Ngày nhận</label><input id="f-received" type="date"></div>
+          <div class="field"><label for="f-dept">Đơn vị sử dụng</label><select id="f-dept"></select></div>
+          <div class="field"><label for="f-status">Tình trạng</label>
+            <select id="f-status">
+              <option value="HOAT_DONG">Hoạt động</option><option value="SU_CO">Sự cố</option>
+              <option value="DANG_SUA">Đang sửa chữa</option><option value="DANG_BAO_DUONG">Đang bảo dưỡng</option>
+              <option value="NGUNG_SU_DUNG">Ngừng sử dụng</option>
+            </select>
+          </div>
+          <div class="field"><label for="f-model">Model</label><input id="f-model"></div>
+          <div class="field"><label for="f-serial">Số serial</label><input id="f-serial"></div>
+        </div>
+        <div class="field"><label for="f-notes">Ghi chú</label><input id="f-notes"></div>
+        <div class="modal__foot">
+          <button type="button" class="btn btn--light" data-close-modal>Huỷ</button>
+          <button type="submit" class="btn btn--dark">Lưu thiết bị</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status">Đã cập nhật.</div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script>
+    let departments = [];
+
+    async function load() {
+      try {
+        if (!departments.length) {
+          departments = (await API.get('/departments')).data;
+          document.getElementById('f-dept').innerHTML = '<option value="">— Chọn đơn vị —</option>' +
+            departments.map((d) => `<option value="${d.id}">${d.name}</option>`).join('');
+        }
+        const qs = new URLSearchParams({ pageSize: 100 });
+        if (document.getElementById('q').value) qs.set('q', document.getElementById('q').value.trim());
+        if (document.getElementById('status').value) qs.set('status', document.getElementById('status').value);
+        const res = await API.get('/equipment?' + qs);
+        const tbody = document.getElementById('rows');
+        if (!res.data.length) { tbody.innerHTML = '<tr><td colspan="8">Không có thiết bị nào.</td></tr>'; }
+        else {
+          tbody.innerHTML = res.data.map((e, i) => `
+            <tr>
+              <td>${i + 1}</td>
+              <td><b>${e.name}</b>${e.model ? `<br><small style="color:#8B8E99">${e.model}</small>` : ''}</td>
+              <td><code>${e.code}</code></td>
+              <td>${e.country_of_origin || '—'}</td>
+              <td>${UI.date(e.received_date)}</td>
+              <td>${e.department_name || '—'}</td>
+              <td>${UI.badge(e.status)}</td>
+              <td style="text-align:right; white-space:nowrap">
+                <button class="btn btn--ghost" data-edit="${e.id}">Sửa</button>
+                <button class="btn btn--danger" data-deactivate="${e.id}" data-code="${e.code}">Ngừng SD</button>
+              </td>
+            </tr>`).join('');
+        }
+        document.getElementById('total-line').textContent = `— tổng ${res.total} thiết bị`;
+      } catch (err) { showToast(err.message); }
+    }
+
+    document.getElementById('q').addEventListener('keydown', (e) => { if (e.key === 'Enter') load(); });
+    document.getElementById('status').addEventListener('change', load);
+
+    document.getElementById('equip-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const id = document.getElementById('f-id').value;
+      const body = {
+        code: document.getElementById('f-code').value.trim(),
+        name: document.getElementById('f-name').value.trim(),
+        countryOfOrigin: document.getElementById('f-country').value.trim(),
+        receivedDate: document.getElementById('f-received').value || null,
+        departmentId: document.getElementById('f-dept').value || null,
+        status: document.getElementById('f-status').value,
+        model: document.getElementById('f-model').value.trim(),
+        serialNumber: document.getElementById('f-serial').value.trim(),
+        notes: document.getElementById('f-notes').value.trim(),
+      };
+      try {
+        if (id) await API.put('/equipment/' + id, body);
+        else await API.post('/equipment', body);
+        showToast(id ? 'Đã cập nhật thiết bị.' : 'Đã thêm thiết bị vào danh mục.');
+        document.querySelector('#modalAdd.is-open').classList.remove('is-open');
+        e.target.reset();
+        load();
+      } catch (err) { showToast(err.message); }
+    });
+
+    document.getElementById('rows').addEventListener('click', async (e) => {
+      const editBtn = e.target.closest('[data-edit]');
+      if (editBtn) {
+        const id = editBtn.dataset.edit;
+        const res = await API.get('/equipment/' + id);
+        const eq = res.equipment;
+        document.getElementById('modalTitle').textContent = 'Sửa thiết bị ' + eq.code;
+        document.getElementById('f-id').value = eq.id;
+        document.getElementById('f-code').value = eq.code;
+        document.getElementById('f-name').value = eq.name;
+        document.getElementById('f-country').value = eq.country_of_origin || '';
+        document.getElementById('f-received').value = eq.received_date || '';
+        document.getElementById('f-dept').value = eq.department_id || '';
+        document.getElementById('f-status').value = eq.status;
+        document.getElementById('f-model').value = eq.model || '';
+        document.getElementById('f-serial').value = eq.serial_number || '';
+        document.getElementById('f-notes').value = eq.notes || '';
+        document.getElementById('modalAdd').classList.add('is-open');
+        return;
+      }
+      const deBtn = e.target.closest('[data-deactivate]');
+      if (deBtn && confirm(`Ngừng sử dụng thiết bị ${deBtn.dataset.code}? Hồ sơ vẫn được lưu trữ.`)) {
+        try {
+          const res = await fetch(`/api/v1/equipment/${deBtn.dataset.deactivate}`, {
+            method: 'DELETE', headers: { Authorization: 'Bearer ' + API.token },
+          });
+          const data = await res.json();
+          showToast(res.ok ? data.message : data.error);
+          load();
+        } catch (err) { showToast(err.message); }
+      }
+    });
+
+    if (guardPage()) load();
+  </script>
+</body>
+</html>

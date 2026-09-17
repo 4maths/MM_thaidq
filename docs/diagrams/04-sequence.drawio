@@ -1,0 +1,79 @@
+<mxfile host="app.diagrams.net" modified="2026-09-16T00:00:00.000Z" agent="ET3161-BTL" version="24.0.0">
+  <diagram id="seq-incident" name="5. Sequence - Xử lý sự cố">
+    <mxGraphModel dx="1400" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1350" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="ll1" value=":Nhân viên đơn vị" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="60" y="40" width="160" height="720" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll2" value=":Văn phòng Cục" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="310" y="40" width="160" height="720" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll3" value=":Hệ thống QLTT" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="560" y="40" width="160" height="720" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll4" value=":Lãnh đạo Cục" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="810" y="40" width="160" height="720" as="geometry"/>
+        </mxCell>
+        <mxCell id="ll5" value=":Nhà thầu ngoài" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="1060" y="40" width="160" height="720" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="m1" value="1: baoSuCo(thiết bị, mô tả)" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.114;entryX=0.5;entryY=0.114;" edge="1" parent="1" source="ll1" target="ll3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="m2" value="2: thông báo sự cố mới" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;fontSize=11;exitX=0.5;exitY=0.171;entryX=0.5;entryY=0.171;" edge="1" parent="1" source="ll3" target="ll2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="m3" value="3: xemXetNguyenNhan()" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.243;entryX=0.5;entryY=0.243;" edge="1" parent="1" source="ll2" target="ll3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="m4" value="4: phanLoai() — [nhỏ → tự khắc phục | lớn → thuê ngoài]" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.3;entryX=0.9;entryY=0.3;" edge="1" parent="1" source="ll3" target="ll3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="m5" value="5: lapPhuongAnSuaChua()" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.386;entryX=0.5;entryY=0.386;" edge="1" parent="1" source="ll2" target="ll3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="m6" value="6: gửi yêu cầu phê duyệt" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;fontSize=11;exitX=0.5;exitY=0.443;entryX=0.5;entryY=0.443;" edge="1" parent="1" source="ll3" target="ll4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="m7" value="7: pheDuyet()" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.514;entryX=0.5;entryY=0.514;" edge="1" parent="1" source="ll4" target="ll3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="m8" value="8: thông báo giao sửa chữa" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;fontSize=11;exitX=0.5;exitY=0.571;entryX=0.5;entryY=0.571;" edge="1" parent="1" source="ll3" target="ll5"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="m9" value="9: baoCaoHoanThanh()" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.643;entryX=0.5;entryY=0.643;" edge="1" parent="1" source="ll5" target="ll3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="m10" value="10: lapBienBanNghiemThu(BM/04)" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.714;entryX=0.5;entryY=0.714;" edge="1" parent="1" source="ll2" target="ll3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="m11" value="11: kyNghiemThu()" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.771;entryX=0.5;entryY=0.771;" edge="1" parent="1" source="ll1" target="ll3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="m12" value="12: capNhatHoSoThietBi() + ghiNhatKy()" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.843;entryX=0.9;entryY=0.843;" edge="1" parent="1" source="ll3" target="ll3"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="seqnote" value="Ghi chú: nhánh «nhỏ» kết thúc ngay sau bước 4 — đơn vị tự khắc phục và cập nhật hồ sơ (6.2.3b), không qua phê duyệt." style="shape=note;whiteSpace=wrap;html=1;size=16;verticalAlign=top;align=left;spacingLeft=8;fontSize=11;fillColor=#FFF9E6;" vertex="1" parent="1">
+          <mxGeometry x="560" y="790" width="520" height="60" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram id="seq-plan" name="6. Sequence - Kế hoạch bảo dưỡng">
+    <mxGraphModel dx="1300" dy="900" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1200" pageHeight="850" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+
+        <mxCell id="pl1" value=":Văn phòng Cục" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="60" y="40" width="170" height="760" as="geometry"/>
+        </mxCell>
+        <mxCell id="pl2" value=":Hệ thống QLTT" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="360" y="40" width="170" height="760" as="geometry"/>
+        </mxCell>
+        <mxCell id="pl3" value=":Lãnh đạo Cục" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="660" y="40" width="170" height="760" as="geometry"/>
+        </mxCell>
+        <mxCell id="pl4" value=":Đơn vị sử dụng" style="shape=umlLifeline;perimeter=lifelinePerimeter;whiteSpace=wrap;html=1;container=1;collapsible=0;recursiveResize=0;outlineConnect=0;portConstraint=eastwest;size=40;" vertex="1" parent="1">
+          <mxGeometry x="960" y="40" width="170" height="760" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="p1" value="1: taoKeHoach(năm, danhMuc)" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.105;entryX=0.5;entryY=0.105;" edge="1" parent="1" source="pl1" target="pl2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p2" value="2: themChiTiet(thiết bị, nội dung, tháng, loại thực hiện)" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.171;entryX=0.5;entryY=0.171;" edge="1" parent="1" source="pl1" target="pl2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p3" value="3: trinhDuyet()" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.237;entryX=0.5;entryY=0.237;" edge="1" parent="1" source="pl1" target="pl2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p4" value="4: thông báo kế hoạch chờ duyệt" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;fontSize=11;exitX=0.5;exitY=0.289;entryX=0.5;entryY=0.289;" edge="1" parent="1" source="pl2" target="pl3"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p5" value="5: pheDuyet() / tuChoi(gopY)" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.355;entryX=0.5;entryY=0.355;" edge="1" parent="1" source="pl3" target="pl2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p6" value="6: phát hành kế hoạch — thông báo các đơn vị" style="html=1;verticalAlign=bottom;endArrow=open;dashed=1;fontSize=11;exitX=0.5;exitY=0.421;entryX=0.5;entryY=0.421;" edge="1" parent="1" source="pl2" target="pl4"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p7" value="7: theoDoiTienDo()  «loop — mỗi hạng mục»" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.487;entryX=0.5;entryY=0.487;" edge="1" parent="1" source="pl1" target="pl2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p8" value="8: capNhatKetQua(hoàn thành hạng mục)" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.553;entryX=0.5;entryY=0.553;" edge="1" parent="1" source="pl4" target="pl2"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="p9" value="9: capNhatHoSoThietBi() + nhacLichBaoDuong()" style="html=1;verticalAlign=bottom;endArrow=block;fontSize=11;exitX=0.5;exitY=0.618;entryX=0.9;entryY=0.618;" edge="1" parent="1" source="pl2" target="pl2"><mxGeometry relative="1" as="geometry"/></mxCell>
+
+        <mxCell id="plnote" value="Ghi chú: nếu kế hoạch bị từ chối — quay lại bước 1/2 để chỉnh sửa.&#10;Ban QMS theo dõi tiến độ qua báo cáo thống kê (màn hình Báo cáo)." style="shape=note;whiteSpace=wrap;html=1;size=16;verticalAlign=top;align=left;spacingLeft=8;fontSize=11;fillColor=#FFF9E6;" vertex="1" parent="1">
+          <mxGeometry x="360" y="680" width="560" height="60" as="geometry"/>
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

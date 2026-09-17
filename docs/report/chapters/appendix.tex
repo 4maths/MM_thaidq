@@ -1,0 +1,100 @@
+\appendix
+
+% Đổi tên "Chương" thành "Phụ lục" cho các phần sau \appendix
+\renewcommand{\thechapter}{\Alph{chapter}}
+\titleformat{\chapter}[display]
+  {\normalfont\Large\bfseries\centering}{Phụ lục \thechapter}{6pt}{\Large}
+
+\chapter{Ma trận truy vết}
+
+Ma trận sau bảo đảm mọi thành phần của hệ thống đều truy vết được về quy trình gốc QT.QLD.09.01 và ngược lại — cơ sở để Ban QMS thẩm định.
+
+\begin{longtable}{P{1.7cm}P{2.6cm}P{1.9cm}P{2.9cm}P{2.6cm}P{2.6cm}}
+\caption{Ma trận truy vết Use case $\leftrightarrow$ Quy trình $\leftrightarrow$ Biểu mẫu $\leftrightarrow$ CSDL $\leftrightarrow$ Màn hình $\leftrightarrow$ Endpoint}\label{tab:trace}\\
+\toprule
+\textbf{UC} & \textbf{Mục quy trình} & \textbf{BM} & \textbf{Bảng CSDL} & \textbf{Màn hình} & \textbf{Endpoint} \\
+\midrule
+\endfirsthead
+\toprule
+\textbf{UC} & \textbf{Mục} & \textbf{BM} & \textbf{CSDL} & \textbf{Màn hình} & \textbf{Endpoint} \\
+\midrule
+\endhead
+UC-01 & --- & --- & users, roles & dang-nhap & POST /auth/login \\
+UC-02 & 6.2.1 & /01 & equipment & admin/thiet-bi & GET/POST/PUT/DELETE /equipment; GET /equipment/export.xlsx \\
+UC-03 & 6.2.2 & /02 & equipment\_logs & chi-tiet-thiet-bi & GET /equipment/:id; POST /equipment/:id/logs \\
+UC-04 & 6.2.3b & --- & incidents & bao-su-co & POST /incidents \\
+UC-05 & 6.2.3b & --- & incidents & admin/su-co & POST /incidents/:id/review \\
+UC-06 & 6.2.3b & /02 & incidents + equipment\_logs & su-co-cua-toi & POST /incidents/:id/self-resolve \\
+UC-07 & 6.2.3b & --- & repair\_plans & admin/su-co & POST /repair-plans \\
+UC-08 & (dùng chung) & /03 (ký) & --- & --- & POST .../submit \\
+UC-09 & 6.2.3b & --- & repair\_plans & admin/phuong-an & POST /repair-plans/:id/approve|reject \\
+UC-10 & 6.2.3a & /03 & maintenance\_plans + \_items & admin/ke-hoach & GET/POST /plans \\
+UC-11 & 6.2.3a & /03 & maintenance\_plans & admin/ke-hoach & POST /plans/:id/approve|reject \\
+UC-12 & 6.2.4 & /02 & equipment + plan\_items & admin/ke-hoach & PATCH /plans/items/:id; POST /repair-plans/:id/complete \\
+UC-13 & 6.2.5 & /04 & acceptance\_records + \_representatives & admin/nghiem-thu & GET/POST /acceptances; POST /acceptances/:id/sign \\
+UC-14 & mục 4 (QMS) & --- & (đọc toàn bộ) & admin/bao-cao & GET /reports/* \\
+UC-15 & 6.2.3a & --- & notifications & topbar (chấm đỏ) & job cron 07:00; GET /notifications \\
+ISO & mục 7 + ISO 9001 & --- & audit\_logs & admin/nhat-ky & GET /reports/audit \\
+\bottomrule
+\end{longtable}
+
+\chapter{Hướng dẫn cài đặt và tài khoản demo}
+
+\section{Yêu cầu}
+\begin{itemize}
+  \item Docker Desktop (Windows/macOS/Linux) đã chạy.
+  \item Port 8080, 8081, 3001 trống.
+\end{itemize}
+
+\section{Các bước}
+\begin{enumerate}
+  \item Tạo file \texttt{.env} từ \texttt{.env.example}; đổi \texttt{JWT\_SECRET} và mật khẩu PostgreSQL.
+  \item \texttt{docker compose up -d --build} — lần đầu tự chạy migration + seed.
+  \item Truy cập: cổng đơn vị \texttt{http://localhost:8080}; cổng quản trị \texttt{http://localhost:8081}; API \texttt{http://localhost:3001/api/v1/health}.
+  \item Sao lưu: \texttt{docker exec qltt-db-1 pg\_dump -U qltt qltt > backup.sql}.
+\end{enumerate}
+
+\section{Tài khoản demo (mật khẩu chung \texttt{Abc@12345})}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{lll}
+\toprule
+\textbf{Tài khoản} & \textbf{Vai trò} & \textbf{Cổng} \\
+\midrule
+\texttt{vanphong} & Văn phòng Cục & 8081 (quản trị) \\
+\texttt{lanhdao} & Lãnh đạo Cục & 8081 (quản trị) \\
+\texttt{qms} & Ban QMS & 8081 (quản trị) \\
+\texttt{dkt}, \texttt{qlct} & Đơn vị sử dụng & 8080 (đơn vị) \\
+\bottomrule
+\end{tabular}
+\end{table}
+
+\section{Danh mục sản phẩm bàn giao}
+
+\begin{itemize}
+  \item \texttt{docs/report/} — báo cáo phân tích thiết kế (LaTeX, biên dịch bằng XeLaTeX).
+  \item \texttt{docs/diagrams/*.drawio} — bộ sơ đồ UML (10 trang): use case, activity $\times$2, class, sequence $\times$2, state $\times$2, ERD, deployment.
+  \item \texttt{docs/slides/} — slide thuyết trình.
+  \item \texttt{backend/} — mã nguồn API (Node.js + Express + PostgreSQL).
+  \item \texttt{frontend/}, \texttt{frontend-admin/} — hai cổng giao diện.
+  \item \texttt{docker-compose.yml}, \texttt{.env.example}, \texttt{README.md}.
+\end{itemize}
+
+\chapter{Danh mục sơ đồ}
+
+\begin{table}[h]
+\centering
+\begin{tabular}{P{4.6cm}P{10cm}}
+\toprule
+\textbf{Tệp .drawio} & \textbf{Nội dung} \\
+\midrule
+01-use-case.drawio & Sơ đồ use case tổng quát (15 UC, 6 tác nhân, include/extend) \\
+02-activity.drawio & Activity $\times$2: xử lý sự cố (4 phân làn); kế hoạch bảo dưỡng (3 phân làn) \\
+03-class.drawio & Sơ đồ lớp (15 lớp; kế thừa TaiLieu; hợp thành Kế hoạch--Chi tiết, Biên bản--Đại diện) \\
+04-sequence.drawio & Sequence $\times$2: xử lý sự cố; lập và phê duyệt kế hoạch \\
+05-state.drawio & State $\times$2: TrangThietBi; SuCo \\
+06-erd-deployment.drawio & ERD 15 bảng; sơ đồ triển khai 3 lớp \\
+\bottomrule
+\end{tabular}
+\end{table}

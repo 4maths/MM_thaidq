@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Hồ sơ trang thiết bị — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .profile-grid { display: grid; grid-template-columns: 340px 1fr; gap: 24px; align-items: start; }
+    @media (max-width: 900px) { .profile-grid { grid-template-columns: 1fr; } }
+    .panel-card { background: rgba(255,255,255,.04); border: 1px solid rgba(255,255,255,.09); border-radius: 16px; padding: 22px; }
+    .panel-card h3 { font-size: 15px; letter-spacing: .04em; text-transform: uppercase; opacity: .75; margin-bottom: 14px; }
+    .kv { display: grid; grid-template-columns: 130px 1fr; gap: 8px 12px; font-size: 14.5px; }
+    .kv dt { opacity: .6; } .kv dd { margin: 0; }
+    .timeline { list-style: none; margin: 0; padding: 0 0 0 6px; }
+    .timeline li { position: relative; padding: 0 0 22px 26px; border-left: 2px solid rgba(174,141,60,.45); }
+    .timeline li:last-child { border-left-color: transparent; }
+    .timeline li::before { content: ''; position: absolute; left: -8px; top: 2px; width: 14px; height: 14px; border-radius: 50%; background: #AE8D3C; border: 3px solid #131A1C; }
+    .timeline .t-date { font-size: 13px; opacity: .65; }
+    .timeline .t-type { display: inline-block; font-size: 12px; padding: 2px 10px; border-radius: 999px; background: rgba(111,167,180,.16); color: #6FA7B4; margin-left: 8px; }
+    .timeline .t-content { margin-top: 4px; font-size: 14.5px; }
+    .timeline .t-performer { font-size: 13px; opacity: .7; margin-top: 2px; }
+  </style>
+</head>
+<body>
+
+  <div class="topbar">
+    <div class="container topbar__inner">
+      <nav class="topbar__links"><a href="index.html">Quy trình QT.QLD.09.01</a></nav>
+      <div class="topbar__lang"><span style="opacity:.7">BM.QLD.09.01/02</span></div>
+    </div>
+  </div>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html">
+        <svg class="brand__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <circle cx="24" cy="24" r="21" stroke="currentColor" stroke-width="2"/>
+          <path d="M15 33 24 12l9 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18.5 26h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand__text">
+          <span class="brand__name">QUẢN LÝ TRANG THIẾT BỊ</span>
+          <span class="brand__org">Cục Quản lý Dược · Bộ Y tế</span>
+        </span>
+      </a>
+      <nav class="main-nav" aria-label="Menu chính">
+        <a href="index.html">Trang chủ</a>
+        <a href="thiet-bi.html" class="is-active">Tra cứu thiết bị</a>
+        <a href="bao-su-co.html">Báo sự cố</a>
+        <a href="su-co-cua-toi.html">Sự cố của đơn vị</a>
+        <a href="ke-hoach.html">Kế hoạch bảo dưỡng</a>
+      </nav>
+      <div class="header-actions">
+        <a class="login-link" href="dang-nhap.html" data-role="login-link">Đăng nhập</a>
+        <button class="nav-toggle" aria-label="Mở menu" aria-expanded="false">☰</button>
+      </div>
+    </div>
+  </header>
+
+  <main>
+    <div class="container page-head">
+      <nav class="breadcrumb" aria-label="Vị trí trang">
+        <a href="index.html">Trang chủ</a><span>/</span><a href="thiet-bi.html">Danh mục</a><span>/</span>Hồ sơ thiết bị
+      </nav>
+      <h1 id="t-name">Hồ sơ trang thiết bị</h1>
+      <p class="page-head__desc">Số hóa biểu mẫu BM.QLD.09.01/02 — toàn bộ lịch sử bảo trì, sửa chữa, thay thế của thiết bị.</p>
+    </div>
+
+    <section class="section" style="padding-top:0">
+      <div class="container profile-grid">
+        <aside class="panel-card">
+          <h3>Thông tin thiết bị</h3>
+          <dl class="kv" id="equip-info">
+            <dt>Đang tải…</dt>
+          </dl>
+        </aside>
+
+        <div>
+          <div class="panel-card" style="margin-bottom:20px;">
+            <h3>Lịch sử bảo trì / sửa chữa (BM/02)</h3>
+            <ol class="timeline" id="timeline">
+              <li>Đang tải hồ sơ…</li>
+            </ol>
+          </div>
+          <div class="panel-card">
+            <h3>Sự cố liên quan</h3>
+            <ul id="incident-list" style="margin:0; padding-left:18px; font-size:14.5px; line-height:2;"></ul>
+          </div>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>© <span data-role="year">2026</span> Cục Quản lý Dược – Bộ Y tế.</span>
+      <span>QT.QLD.09.01</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/api.js?v=2"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    const id = new URLSearchParams(location.search).get('id');
+    const typeLabel = { BAO_DUONG: 'Bảo dưỡng', SUA_CHUA: 'Sửa chữa', THAY_THE: 'Thay thế', KHAC_PHUC_SU_CO: 'Khắc phục sự cố' };
+
+    async function load() {
+      if (!id) { document.getElementById('t-name').textContent = 'Thiếu tham số ?id'; return; }
+      try {
+        const res = await API.get('/equipment/' + id);
+        const e = res.equipment;
+        document.title = `${e.name} — Hồ sơ trang thiết bị`;
+        document.getElementById('t-name').textContent = e.name;
+        document.getElementById('equip-info').innerHTML = `
+          <dt>Mã số</dt><dd><code>${e.code}</code></dd>
+          <dt>Tình trạng</dt><dd>${UI.statusBadge(e.status)}</dd>
+          <dt>Nước sản xuất</dt><dd>${e.country_of_origin || '—'}</dd>
+          <dt>Ngày nhận</dt><dd>${UI.fmtDate(e.received_date)}</dd>
+          <dt>Đơn vị sử dụng</dt><dd>${e.department_name || '—'}</dd>
+          <dt>Model</dt><dd>${e.model || '—'}</dd>
+          <dt>Số serial</dt><dd>${e.serial_number || '—'}</dd>
+          <dt>Ghi chú</dt><dd>${e.notes || '—'}</dd>`;
+
+        const tl = document.getElementById('timeline');
+        if (!res.logs.length) {
+          tl.innerHTML = '<li>Chưa có bản ghi bảo trì / sửa chữa nào trong hồ sơ.</li>';
+        } else {
+          tl.innerHTML = res.logs.map((l) => `
+            <li>
+              <span class="t-date">${UI.fmtDate(l.performed_date)}</span>
+              <span class="t-type">${typeLabel[l.log_type] || l.log_type}</span>
+              <div class="t-content">${l.content}</div>
+              <div class="t-performer">Người thực hiện: ${l.performer}</div>
+            </li>`).join('');
+        }
+
+        const il = document.getElementById('incident-list');
+        il.innerHTML = res.incidents.length
+          ? res.incidents.map((i) => `<li><code>${i.code}</code> — ${i.description} · ${UI.statusBadge(i.status)} <small style="opacity:.6">(${UI.fmtDate(i.reported_at)})</small></li>`).join('')
+          : '<li style="opacity:.6; list-style:none; margin-left:-18px;">Chưa có sự cố nào được ghi nhận.</li>';
+      } catch (err) {
+        document.getElementById('equip-info').innerHTML = `<dt>Lỗi</dt><dd>${err.message} — cần <a href="dang-nhap.html" style="color:#6FA7B4">đăng nhập</a> để xem hồ sơ.</dd>`;
+      }
+    }
+    load();
+  </script>
+</body>
+</html>

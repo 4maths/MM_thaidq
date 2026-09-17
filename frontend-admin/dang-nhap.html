@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập quản trị — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <style>
+    body { display: grid; place-items: center; min-height: 100vh; }
+    .auth-card { background: #fff; border-radius: 22px; padding: 40px 36px; width: min(430px, 92vw); box-shadow: 0 24px 60px rgba(60, 58, 120, .12); }
+    .auth-brand { display: flex; align-items: center; gap: 12px; margin-bottom: 26px; }
+    .auth-brand svg { width: 44px; height: 44px; color: #8783E0; }
+    .auth-brand b { display: block; font-size: 1.05rem; }
+    .auth-brand span { font-size: .8rem; color: #8B8E99; }
+    .auth-card h1 { font-size: 1.5rem; margin-bottom: .35rem; }
+    .auth-card .sub { color: #8B8E99; font-size: .9rem; margin-bottom: 1.6rem; }
+    .field { margin-bottom: 1rem; }
+    .field label { display: block; font-size: .85rem; font-weight: 600; margin-bottom: .4rem; }
+    .field input { width: 100%; padding: 12px 14px; border: 1.5px solid #E5E4F0; border-radius: 12px; font: inherit; }
+    .field input:focus { outline: 2px solid #8783E0; border-color: transparent; }
+    .auth-error { color: #E05B5B; font-size: .87rem; margin-top: .8rem; display: none; }
+    .demo-hint { margin-top: 1.4rem; padding-top: 1rem; border-top: 1px dashed #E5E4F0; font-size: .78rem; color: #8B8E99; line-height: 1.8; }
+    code { color: #8783E0; font-weight: 600; }
+  </style>
+</head>
+<body>
+
+  <div class="auth-card">
+    <div class="auth-brand">
+      <svg viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <rect x="2.5" y="2.5" width="19" height="19" rx="6.5" fill="currentColor"/>
+        <path d="M12 6.5v11M7 9.5h10M7 14.5h6" stroke="#fff" stroke-width="1.9" stroke-linecap="round"/>
+      </svg>
+      <div>
+        <b>Quản lý Thiết bị</b>
+        <span>CỤC QUẢN LÝ DƯỢC · QT.QLD.09.01</span>
+      </div>
+    </div>
+    <h1>Đăng nhập hệ quản trị</h1>
+    <p class="sub">Dành cho Văn phòng Cục, Lãnh đạo Cục và Ban QMS.</p>
+
+    <form id="login-form" novalidate>
+      <div class="field">
+        <label for="username">Tên đăng nhập</label>
+        <input id="username" type="text" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="password">Mật khẩu</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+      </div>
+      <button class="btn btn--dark" type="submit" style="width:100%; justify-content:center; padding:12px;">Đăng nhập</button>
+      <p class="auth-error" id="login-error"></p>
+    </form>
+
+    <div class="demo-hint">
+      Tài khoản demo (mật khẩu chung <code>Abc@12345</code>):<br>
+      Văn phòng Cục: <code>vanphong</code> · Lãnh đạo Cục: <code>lanhdao</code> · Ban QMS: <code>qms</code>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script>
+    const form = document.getElementById('login-form');
+    const errBox = document.getElementById('login-error');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errBox.style.display = 'none';
+      try {
+        const res = await API.post('/auth/login', {
+          username: form.username.value.trim(),
+          password: form.password.value,
+        });
+        if (res.user.role === 'DON_VI' || res.user.role === 'NHA_THAU') {
+          errBox.textContent = 'Tài khoản đơn vị sử dụng/nhà thầu dùng cổng dành cho đơn vị (frontend).';
+          errBox.style.display = 'block';
+          return;
+        }
+        API.saveSession(res.token, res.user);
+        const next = new URLSearchParams(location.search).get('next');
+        location.href = next && !next.includes('dang-nhap') ? next : 'index.html';
+      } catch (err) {
+        errBox.textContent = err.message;
+        errBox.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

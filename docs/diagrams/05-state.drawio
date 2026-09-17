@@ -1,0 +1,103 @@
+<mxfile host="app.diagrams.net" modified="2026-09-16T00:00:00.000Z" agent="ET3161-BTL" version="24.0.0">
+  <diagram id="state-equip" name="7. State - TrangThietBi">
+    <mxGraphModel dx="900" dy="850" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="700" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title" value="Biểu đồ trạng thái — lớp TrangThietBi" style="text;html=1;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="150" y="10" width="400" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="s_init" value="" style="ellipse;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="288" y="50" width="24" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="s_hoatdong" value="Hoạt động" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#D5E8D4;" vertex="1" parent="1">
+          <mxGeometry x="190" y="110" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s_baoduong" value="Đang bảo dưỡng" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="40" y="230" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s_suco" value="Có sự cố" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#F8CECC;" vertex="1" parent="1">
+          <mxGeometry x="330" y="230" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s_choduyet" value="Chờ phê duyệt&#10;phương án" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="330" y="340" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s_dangsua" value="Đang sửa chữa" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#FFE6CC;" vertex="1" parent="1">
+          <mxGeometry x="330" y="450" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s_nghiemthu" value="Chờ nghiệm thu" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="330" y="560" width="140" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s_thanhly" value="Thanh lý / ngừng sử dụng" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#E1D5E7;" vertex="1" parent="1">
+          <mxGeometry x="40" y="560" width="170" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="s_end" value="" style="ellipse;html=1;shape=endState;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="113" y="680" width="24" height="24" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="t1" style="endArrow=block;html=1;" edge="1" parent="1" source="s_init" target="s_hoatdong"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="t2" value="[theo kế hoạch năm]" style="endArrow=block;html=1;fontSize=11;exitX=0;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="s_hoatdong" target="s_baoduong"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="t3" value="[hoàn thành]" style="endArrow=block;html=1;fontSize=11;exitX=0.5;exitY=0;entryX=0;entryY=0.5;" edge="1" parent="1" source="s_baoduong" target="s_hoatdong"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="t4" value="[báo sự cố]" style="endArrow=block;html=1;fontSize=11;exitX=1;exitY=0.5;entryX=0.5;entryY=0;" edge="1" parent="1" source="s_hoatdong" target="s_suco"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="t5" value="[tự khắc phục — sự cố nhỏ]" style="endArrow=block;html=1;fontSize=11;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="s_suco" target="s_hoatdong"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="t6" value="[lớn / thuê ngoài]" style="endArrow=block;html=1;fontSize=11;" edge="1" parent="1" source="s_suco" target="s_choduyet"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="t7" value="[được duyệt]" style="endArrow=block;html=1;fontSize=11;" edge="1" parent="1" source="s_choduyet" target="s_dangsua"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="t8" value="[bị từ chối]" style="endArrow=block;html=1;fontSize=11;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="s_choduyet" target="s_suco"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="t9" value="[nhà thầu hoàn thành]" style="endArrow=block;html=1;fontSize=11;" edge="1" parent="1" source="s_dangsua" target="s_nghiemthu"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="t10" value="[nghiệm thu đạt]" style="endArrow=block;html=1;fontSize=11;exitX=0;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="s_nghiemthu" target="s_hoatdong"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="t11" value="[không đạt]" style="endArrow=block;html=1;fontSize=11;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="s_nghiemthu" target="s_dangsua"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="t12" value="[ngừng sử dụng]" style="endArrow=block;html=1;fontSize=11;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="s_hoatdong" target="s_thanhly"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="t13" style="endArrow=block;html=1;" edge="1" parent="1" source="s_thanhly" target="s_end"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+
+  <diagram id="state-incident" name="8. State - SuCo">
+    <mxGraphModel dx="900" dy="850" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="700" pageHeight="800" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="title2" value="Biểu đồ trạng thái — lớp SuCo" style="text;html=1;fontSize=14;fontStyle=1;align=center;" vertex="1" parent="1">
+          <mxGeometry x="150" y="10" width="400" height="30" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="i_init" value="" style="ellipse;fillColor=#000000;strokeColor=#000000;" vertex="1" parent="1">
+          <mxGeometry x="298" y="50" width="24" height="24" as="geometry"/>
+        </mxCell>
+        <mxCell id="i_moi" value="Mới" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#F8CECC;" vertex="1" parent="1">
+          <mxGeometry x="230" y="110" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="i_xemxet" value="Đang xem xét" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="230" y="220" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="i_choduyet" value="Chờ phê duyệt" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="120" y="340" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="i_dangsua" value="Đang sửa chữa" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#FFE6CC;" vertex="1" parent="1">
+          <mxGeometry x="360" y="340" width="150" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="i_choNT" value="Chờ nghiệm thu" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;" vertex="1" parent="1">
+          <mxGeometry x="230" y="460" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="i_daxuly" value="Đã xử lý" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#D5E8D4;" vertex="1" parent="1">
+          <mxGeometry x="230" y="570" width="160" height="50" as="geometry"/>
+        </mxCell>
+        <mxCell id="i_dong" value="Đóng" style="rounded=1;whiteSpace=wrap;html=1;arcSize=50;fillColor=#E1D5E7;" vertex="1" parent="1">
+          <mxGeometry x="230" y="680" width="160" height="50" as="geometry"/>
+        </mxCell>
+
+        <mxCell id="it1" style="endArrow=block;html=1;" edge="1" parent="1" source="i_init" target="i_moi"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="it2" value="[Văn phòng Cục tiếp nhận]" style="endArrow=block;html=1;fontSize=11;" edge="1" parent="1" source="i_moi" target="i_xemxet"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="it3" value="[nhỏ: tự khắc phục + cập nhật hồ sơ]" style="endArrow=block;html=1;fontSize=11;exitX=0;exitY=0.5;entryX=0;entryY=0.5;" edge="1" parent="1" source="i_xemxet" target="i_dong"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="it4" value="[lớn: lập phương án]" style="endArrow=block;html=1;fontSize=11;exitX=1;exitY=0.5;entryX=1;entryY=0.5;" edge="1" parent="1" source="i_xemxet" target="i_choduyet"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="it5" value="[được duyệt]" style="endArrow=block;html=1;fontSize=11;" edge="1" parent="1" source="i_choduyet" target="i_dangsua"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="it6" value="[bị từ chối]" style="endArrow=block;html=1;fontSize=11;exitX=0.5;exitY=0;entryX=0.5;entryY=0;" edge="1" parent="1" source="i_choduyet" target="i_xemxet"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="it7" value="[nhà thầu / nội bộ hoàn thành]" style="endArrow=block;html=1;fontSize=11;exitX=0.5;exitY=1;entryX=1;entryY=0.5;" edge="1" parent="1" source="i_dangsua" target="i_choNT"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="it8" value="[nghiệm thu đạt]" style="endArrow=block;html=1;fontSize=11;" edge="1" parent="1" source="i_choNT" target="i_daxuly"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="it9" value="[không đạt]" style="endArrow=block;html=1;fontSize=11;exitX=1;exitY=0.5;entryX=0.5;entryY=1;" edge="1" parent="1" source="i_choNT" target="i_dangsua"><mxGeometry relative="1" as="geometry"/></mxCell>
+        <mxCell id="it10" value="[đã cập nhật hồ sơ]" style="endArrow=block;html=1;fontSize=11;" edge="1" parent="1" source="i_daxuly" target="i_dong"><mxGeometry relative="1" as="geometry"/></mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

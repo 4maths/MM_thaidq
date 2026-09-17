@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Đăng nhập — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/style.css">
+  <style>
+    .auth-wrap { min-height: calc(100vh - 300px); display: grid; place-items: center; padding: 48px 0; }
+    .auth-card { background: var(--panel, #1A2325); border: 1px solid rgba(255,255,255,.08); border-radius: 20px; padding: 36px; width: min(420px, 92vw); }
+    .auth-card h1 { font-family: 'Playfair Display', serif; font-size: 26px; margin-bottom: 6px; }
+    .auth-card p.sub { opacity: .7; margin-bottom: 24px; font-size: 14px; }
+    .field { margin-bottom: 16px; }
+    .field label { display: block; font-size: 13px; margin-bottom: 6px; opacity: .8; }
+    .field input { width: 100%; padding: 11px 14px; border-radius: 10px; border: 1px solid rgba(255,255,255,.14); background: rgba(255,255,255,.05); color: inherit; font: inherit; }
+    .field input:focus { outline: 2px solid #AE8D3C; border-color: transparent; }
+    .form-success { color: #7fd4a2; font-size: 14px; margin-top: 12px; display: none; }
+    .form-error { color: #ff9c9c; font-size: 14px; margin-top: 12px; display: none; }
+    .demo-hint { margin-top: 20px; font-size: 12.5px; opacity: .65; line-height: 1.7; border-top: 1px dashed rgba(255,255,255,.14); padding-top: 14px; }
+    code { color: #6FA7B4; }
+  </style>
+</head>
+<body>
+
+  <header class="site-header">
+    <div class="container site-header__inner">
+      <a class="brand" href="index.html">
+        <svg class="brand__icon" viewBox="0 0 48 48" fill="none" aria-hidden="true">
+          <circle cx="24" cy="24" r="21" stroke="currentColor" stroke-width="2"/>
+          <path d="M15 33 24 12l9 21" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+          <path d="M18.5 26h11" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        <span class="brand__text">
+          <span class="brand__name">QUẢN LÝ TRANG THIẾT BỊ</span>
+          <span class="brand__org">Cục Quản lý Dược · Bộ Y tế</span>
+        </span>
+      </a>
+    </div>
+  </header>
+
+  <main class="auth-wrap">
+    <div class="auth-card">
+      <h1>Đăng nhập</h1>
+      <p class="sub">Tài khoản nội bộ dành cho cán bộ, nhân viên Cục Quản lý Dược.</p>
+      <form id="login-form" novalidate>
+        <div class="field">
+          <label for="username">Tên đăng nhập</label>
+          <input id="username" name="username" type="text" autocomplete="username" required>
+        </div>
+        <div class="field">
+          <label for="password">Mật khẩu</label>
+          <input id="password" name="password" type="password" autocomplete="current-password" required>
+        </div>
+        <button class="btn-gold" type="submit" style="width:100%; padding:12px;">Đăng nhập</button>
+        <p class="form-error" id="login-error"></p>
+      </form>
+      <div class="demo-hint">
+        Tài khoản demo (mật khẩu chung <code>Abc@12345</code>):<br>
+        Đơn vị sử dụng: <code>dkt</code>, <code>qlct</code> · Văn phòng Cục: <code>vanphong</code><br>
+        Lãnh đạo Cục: <code>lanhdao</code> · Ban QMS: <code>qms</code>
+      </div>
+    </div>
+  </main>
+
+  <footer class="site-footer">
+    <div class="container footer-bottom">
+      <span>© <span data-role="year">2026</span> Cục Quản lý Dược – Bộ Y tế.</span>
+      <span>QT.QLD.09.01</span>
+    </div>
+  </footer>
+
+  <script src="assets/js/api.js?v=2"></script>
+  <script src="assets/js/main.js"></script>
+  <script>
+    const form = document.getElementById('login-form');
+    const errBox = document.getElementById('login-error');
+    form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      errBox.style.display = 'none';
+      try {
+        const res = await API.post('/auth/login', {
+          username: form.username.value.trim(),
+          password: form.password.value,
+        });
+        API.saveSession(res.token, res.user);
+        const next = new URLSearchParams(location.search).get('next');
+        // cán bộ quản trị có thể chuyển sang cổng quản trị (frontend-admin)
+        location.href = next && !next.includes('dang-nhap') ? next
+          : (res.user.role === 'DON_VI' ? 'index.html' : 'index.html');
+      } catch (err) {
+        errBox.textContent = err.message;
+        errBox.style.display = 'block';
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,61 @@
+\chapter{Giới thiệu đề tài}
+
+\section{Bối cảnh}
+
+Cục Quản lý Dược (Bộ Y tế) vận hành Hệ thống quản lý chất lượng (HT QLCL) theo TCVN ISO 9001:2015. Trong khuôn khổ đó, quy trình \textbf{QT.QLD.09.01 --- Quản lý trang thiết bị} (ban hành 07/8/2018, lần ban hành 01, biên soạn bởi Thư ký QMS, kiểm tra bởi Lãnh đạo chất lượng, phê duyệt bởi Cục trưởng) quy định cách thức thống nhất trong việc quản lý trang thiết bị của Cục nhằm:
+\begin{itemize}
+  \item duy trì sự hoạt động ổn định, liên tục của các trang thiết bị;
+  \item đảm bảo độ tin cậy của các thiết bị;
+  \item phòng ngừa, ngăn chặn sự cố;
+  \item hạn chế thiệt hại đến mức thấp nhất nếu sự cố xảy ra.
+\end{itemize}
+
+Quy trình hiện đang vận hành thủ công qua bốn biểu mẫu giấy/Excel:
+\begin{itemize}
+  \item \textbf{BM.QLD.09.01/01} --- Danh mục trang thiết bị;
+  \item \textbf{BM.QLD.09.01/02} --- Hồ sơ trang thiết bị (lịch sử bảo trì, sửa chữa);
+  \item \textbf{BM.QLD.09.01/03} --- Kế hoạch bảo dưỡng, thay thế hàng năm;
+  \item \textbf{BM.QLD.09.01/04} --- Biên bản nghiệm thu.
+\end{itemize}
+
+\section{Vấn đề của quy trình thủ công}
+
+Qua khảo sát tài liệu quy trình và đối chiếu thực tiận vận hành, nhóm xác định các hạn chế chính của quy trình giấy (chi tiết tại mục 2.5):
+\begin{enumerate}
+  \item Hồ sơ thiết bị phân tán tại từng đơn vị sử dụng, khó tổng hợp và dễ thất lạc.
+  \item Việc cập nhật hồ sơ (BM/02) phụ thuộc kỷ luật nhập liệu thủ công, thiếu cơ chế ép buộc, dẫn đến thiếu vết truy vết khi cần kiểm tra của Ban QMS.
+  \item Kế hoạch bảo dưỡng hàng năm (BM/03) lưu tại Văn phòng Cục với thời hạn 1 năm; không có cơ chế nhắc lịch, dễ bỏ sót hạng mục đến hạn.
+  \item Luồng phê duyệt bằng văn bản giấy (đơn vị $\rightarrow$ Văn phòng Cục $\rightarrow$ Lãnh đạo Cục) kéo dài thời gian, không theo dõi được trạng thái xử lý.
+  \item Biên bản nghiệm thu (BM/04) lưu 1 năm tại đơn vị sử dụng, khó tra cứu khi phát sinh tranh chấp với nhà thầu.
+\end{enumerate}
+
+\section{Mục tiêu của hệ thống}
+
+Hệ thống phần mềm được phân tích và thiết kế trong báo cáo này nhằm:
+\begin{enumerate}
+  \item \textbf{Số hóa} toàn bộ bốn biểu mẫu thành dữ liệu có cấu trúc, tránh thất lạc, trùng lặp.
+  \item \textbf{Tự động hóa luồng phê duyệt} (đơn vị $\rightarrow$ Văn phòng Cục $\rightarrow$ Lãnh đạo Cục) với trạng thái theo dõi thời gian thực.
+  \item \textbf{Cảnh báo, nhắc lịch} bảo dưỡng định kỳ, tránh bỏ sót.
+  \item \textbf{Truy vết đầy đủ} lịch sử sự cố --- sửa chữa --- nghiệm thu của từng thiết bị; dữ liệu lịch sử chỉ thêm, không sửa/xóa (audit trail).
+  \item \textbf{Báo cáo, thống kê} cho Ban QMS và Lãnh đạo Cục.
+\end{enumerate}
+
+\section{Phạm vi}
+
+\textbf{Trong phạm vi:} quản lý danh mục trang thiết bị; hồ sơ thiết bị; báo và xử lý sự cố (nhỏ — tự khắc phục, lớn — thuê ngoài có phê duyệt); kế hoạch bảo dưỡng hàng năm và nhắc lịch; biên bản nghiệm thu; quản lý nhà thầu; phân quyền theo vai trò; báo cáo thống kê; nhật ký thao tác.
+
+\textbf{Ngoài phạm vi:} quản lý tài sản hữu hình ngoài trang thiết bị (mô hình kế toán); thanh toán hợp đồng với nhà thầu; quản lý cơ sở hạ tầng (bản quy trình được đính kèm với tên file có ``và CSHT'' nhưng nội dung lần ban hành 01 chỉ đề cập trang thiết bị); tích hợp chữ ký số thực (hệ thống mô phỏng ký điện tử); SSO/Active Directory (kế hoạch mở rộng).
+
+\section{Phương pháp phân tích và thiết kế}
+
+Nhóm áp dụng quy trình phân tích thiết kế hướng đối tượng theo tài liệu [3], [4]:
+\begin{itemize}
+  \item \textbf{Xác định yêu cầu:} khảo sát quy trình gốc, phỏng vấn ảo theo vai trò, trích xuất trường dữ liệu từ bốn biểu mẫu.
+  \item \textbf{Mô hình hóa chức năng (Chương 3):} sơ đồ use case, đặc tả use case, sơ đồ hoạt động có phân làn.
+  \item \textbf{Mô hình hóa cấu trúc (Chương 4):} phân tích danh từ — động từ để xác định lớp, sơ đồ lớp, thẻ CRC.
+  \item \textbf{Mô hình hóa hành vi (Chương 5):} sơ đồ trình tự, sơ đồ trạng thái.
+  \item \textbf{Thiết kế (Chương 6):} kiến trúc ba lớp, thiết kế cơ sở dữ liệu quan hệ, thiết kế giao diện, thiết kế bảo mật.
+  \item \textbf{Cài đặt thử nghiệm (Chương 7):} nguyên mẫu chạy được, triển khai Docker Compose.
+\end{itemize}
+
+Một nguyên tắc xuyên suốt của nhóm: \emph{giữ đúng ngữ nghĩa nghiệp vụ của quy trình gốc} — đặc biệt là nhánh ``sự cố nhỏ đơn vị tự khắc phục'' không bắt buộc qua phê duyệt đầy đủ — đồng thời tách bạch rõ các tính năng mở rộng (chi phí, mức độ ưu tiên, nhà thầu, SLA) so với nội dung nguyên bản.

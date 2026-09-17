@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kế hoạch bảo dưỡng hàng năm — Hệ thống Quản lý Trang thiết bị</title>
+  <link rel="stylesheet" href="assets/css/admin.css">
+  <style>
+    .table { font-size: .86rem; } .table th { text-align: left; }
+    .plan-tabs { display: flex; gap: .5rem; margin-bottom: 1rem; flex-wrap: wrap; }
+    .item-row { display: grid; grid-template-columns: 2fr 1fr 110px 110px; gap: .5rem; margin-bottom: .5rem; align-items: end; }
+    .item-row input, .item-row select { width: 100%; padding: 9px 10px; border: 1.5px solid #E5E4F0; border-radius: 10px; font: inherit; font-size: .85rem; }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <div id="sidebar-root"></div>
+    <div class="app__main">
+      <div id="topbar-root"></div>
+
+      <main class="page">
+        <div class="page-head">
+          <div>
+            <h1>Kế hoạch bảo dưỡng, thay thế hàng năm</h1>
+            <p>Số hóa BM.QLD.09.01/03 — Văn phòng Cục lập và trình duyệt; Lãnh đạo Cục phê duyệt (mục 6.2.3a).</p>
+          </div>
+          <button class="btn btn--dark" data-open-modal="modalAdd" id="btn-add">+ Lập kế hoạch</button>
+        </div>
+
+        <div class="plan-tabs" id="plan-tabs"></div>
+
+        <section class="panel">
+          <div class="panel__head">
+            <h2 class="panel__title"><span id="plan-title">Các hạng mục</span></h2>
+            <div class="panel__actions" id="plan-actions"></div>
+          </div>
+          <div class="table__wrap">
+            <table class="table">
+              <thead>
+                <tr><th>STT</th><th>Tên trang thiết bị</th><th>Mã số</th><th>Đơn vị sử dụng</th><th>Nội dung</th><th>Đơn vị thực hiện</th><th>Thời gian</th><th>Chi phí</th><th>Tiến độ</th><th style="text-align:right">Thao tác</th></tr>
+              </thead>
+              <tbody id="rows"><tr><td colspan="10">Đang tải…</td></tr></tbody>
+            </table>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal lập kế hoạch -->
+  <div class="modal" id="modalAdd" role="dialog" aria-modal="true" aria-labelledby="addTitle">
+    <div class="modal__overlay" data-close-modal></div>
+    <div class="modal__card" style="max-width:760px">
+      <div class="modal__head">
+        <h3 id="addTitle">Lập kế hoạch bảo dưỡng, thay thế năm</h3>
+        <button class="btn-icon" data-close-modal aria-label="Đóng">✕</button>
+      </div>
+      <form id="plan-form">
+        <div class="form-grid">
+          <div class="field"><label for="n-year">Năm kế hoạch *</label><input id="n-year" type="number" min="2020" max="2100" required></div>
+        </div>
+        <p style="font-size:.85rem; color:#8B8E99; margin:.5rem 0 .75rem;">Các hạng mục — bấm "+ Thêm hạng mục" để bổ sung:</p>
+        <div id="items-host"></div>
+        <button type="button" class="btn btn--light" id="btn-add-item" style="margin-top:.4rem">+ Thêm hạng mục</button>
+        <div class="modal__foot">
+          <button type="button" class="btn btn--light" data-close-modal>Huỷ</button>
+          <button type="submit" class="btn btn--dark">Tạo kế hoạch</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div class="toast" id="toast" role="status">Đã cập nhật.</div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/layout.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script>
+    let plans = [], equipment = [], departments = [], currentPlanId = null;
+
+    async function load() {
+      try {
+        const res = await API.get('/plans');
+        plans = res.data;
+        const tabs = document.getElementById('plan-tabs');
+        if (!plans.length) {
+          tabs.innerHTML = '<span style="color:#8B8E99">Chưa có kế hoạch nào — bấm "Lập kế hoạch" để tạo.</span>';
+          document.getElementById('rows').innerHTML = '<tr><td colspan="10">—</td></tr>';
+          return;
+        }
+        tabs.innerHTML = plans.map((p) => `<button class="chip ${p.id === currentPlanId ? 'is-active' : ''}" data-plan="${p.id}">Năm ${p.year} ${UI.badge(p.status)}</button>`).join('');
+        if (!currentPlanId) currentPlanId = plans[0].id;
+        showPlan(currentPlanId);
+      } catch (err) { showToast(err.message); }
+    }
+
+    async function showPlan(id) {
+      const res = await API.get('/plans/' + id);
+      const p = res.plan;
+      currentPlanId = id;
+      const isLD = API.user.role === 'LANH_DAO_CUC';
+      const isVPC = API.user.role === 'VAN_PHONG_CUC';
+      document.getElementById('plan-title').innerHTML = `Kế hoạch năm ${p.year} ${UI.badge(p.status)} — ${res.items.filter(i => i.status === 'HOAN_THANH').length}/${res.items.length} hoàn thành`;
+      document.getElementById('plan-actions').innerHTML =
+        (isVPC && (p.status === 'NHAP' || p.status === 'TU_CHOI')) ? `<button class="btn btn--dark" data-submit="${p.id}">Trình Lãnh đạo Cục</button>` : '' +
+        (isLD && p.status === 'CHO_DUYET') ? `
+          <button class="btn btn--dark" data-approve="${p.id}">Phê duyệt</button>
+          <button class="btn btn--danger" data-reject="${p.id}">Trả về</button>` : '';
+
+      document.getElementById('rows').innerHTML = res.items.map((i, idx) => `
+        <tr>
+          <td>${idx + 1}</td>
+          <td><b>${i.equipment_name}</b></td>
+          <td><code>${i.equipment_code}</code></td>
+          <td>${i.department_name || '—'}</td>
+          <td style="max-width:240px">${i.content}</td>
+          <td>${UI.badge(i.executor_type)}</td>
+          <td>${UI.monthName(i.planned_month)}</td>
+          <td>${UI.money(i.estimated_cost)}</td>
+          <td>${UI.badge(i.status)}</td>
+          <td style="text-align:right; white-space:nowrap">
+            ${(isVPC || API.user.role === 'DON_VI') && i.status !== 'HOAN_THANH' ? `
+              <button class="btn btn--ghost" data-start="${i.id}">Bắt đầu</button>
+              <button class="btn btn--dark" data-done="${i.id}">Hoàn thành</button>` : ''}
+          </td>
+        </tr>`).join('');
+    }
+
+    document.getElementById('plan-tabs').addEventListener('click', (e) => {
+      const b = e.target.closest('[data-plan]');
+      if (b) showPlan(Number(b.dataset.plan));
+    });
+
+    document.getElementById('plan-actions').addEventListener('click', async (e) => {
+      const s = e.target.closest('[data-submit]');
+      const a = e.target.closest('[data-approve]');
+      const r = e.target.closest('[data-reject]');
+      try {
+        if (s) { const res = await API.post(`/plans/${s.dataset.submit}/submit`); showToast(res.message); load(); }
+        if (a) { const res = await API.post(`/plans/${a.dataset.approve}/approve`, { note: prompt('Ghi chú (tuỳ chọn):') ?? '' }); showToast(res.message); load(); }
+        if (r) { const note = prompt('Lý do trả về (bắt buộc):'); if (!note) return; const res = await API.post(`/plans/${r.dataset.reject}/reject`, { note }); showToast(res.message); load(); }
+      } catch (err) { showToast(err.message); }
+    });
+
+    document.getElementById('rows').addEventListener('click', async (e) => {
+      const st = e.target.closest('[data-start]');
+      const dn = e.target.closest('[data-done]');
+      try {
+        if (st) { await API.patch(`/plans/items/${st.dataset.start}`, { status: 'DANG_THUC_HIEN' }); showToast('Đã cập nhật: đang thực hiện.'); showPlan(currentPlanId); }
+        if (dn) { await API.patch(`/plans/items/${dn.dataset.done}`, { status: 'HOAN_THANH', completionDate: new Date().toISOString().slice(0, 10) }); showToast('Đã ghi hồ sơ thiết bị (BM/02) và hoàn thành hạng mục.'); showPlan(currentPlanId); }
+      } catch (err) { showToast(err.message); }
+    });
+
+    // ---- Modal lập kế hoạch ----
+    document.getElementById('btn-add-item').addEventListener('click', () => {
+      const row = document.createElement('div');
+      row.className = 'item-row';
+      row.innerHTML = `
+        <select class="ir-equip">${equipment.map((e) => `<option value="${e.id}">${e.code} — ${e.name}</option>`).join('')}</select>
+        <input class="ir-content" placeholder="Nội dung bảo dưỡng/thay thế">
+        <select class="ir-exec"><option value="NOI_BO">Nội bộ</option><option value="BEN_NGOAI">Bên ngoài</option></select>
+        <input class="ir-month" type="number" min="1" max="12" placeholder="Tháng">`;
+      document.getElementById('items-host').appendChild(row);
+    });
+
+    document.getElementById('plan-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const items = [...document.querySelectorAll('#items-host .item-row')].map((row) => ({
+        equipmentId: Number(row.querySelector('.ir-equip').value),
+        content: row.querySelector('.ir-content').value.trim(),
+        executorType: row.querySelector('.ir-exec').value,
+        plannedMonth: Number(row.querySelector('.ir-month').value) || null,
+      })).filter((i) => i.content);
+      if (!items.length) { showToast('Hãy thêm ít nhất một hạng mục có nội dung.'); return; }
+      try {
+        const res = await API.post('/plans', { year: Number(document.getElementById('n-year').value), items });
+        showToast(res.message);
+        document.querySelector('#modalAdd.is-open').classList.remove('is-open');
+        document.getElementById('items-host').innerHTML = '';
+        currentPlanId = res.id;
+        load();
+      } catch (err) { showToast(err.message); }
+    });
+
+    if (guardPage()) {
+      load();
+      Promise.all([API.get('/equipment?pageSize=100'), API.get('/departments')]).then(([eq, dp]) => {
+        equipment = eq.data; departments = dp.data;
+      }).catch(() => {});
+    }
+  </script>
+</body>
+</html>
