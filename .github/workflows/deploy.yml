@@ -3,6 +3,8 @@ name: CI/CD Pipeline - QLTT
 on:
   push:
     branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
 
 env:
   REGISTRY: ghcr.io
@@ -11,17 +13,45 @@ env:
   ADMIN_IMAGE: ghcr.io/4maths/mm_thaidq/frontend-admin
 
 jobs:
-  build-and-push:
+  # 1. Kiểm tra code 
+  test-and-scan:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
-
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
 
-      - name: Log in to GitHub Container Registry
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - name: Install & Test Backend
+        run: |
+          cd backend
+          npm ci || npm install
+          # Nếu trong package.json có script test thì chạy, không có thì bỏ qua
+          npm test --if-present
+
+      - name: Scan vulnerability with Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          severity: 'CRITICAL'
+          exit-code: '0' 
+
+  # 2.  Đóng gói và đẩy lên Container Registry
+  build-and-push:
+    needs: test-and-scan
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Log in to GHCR
         uses: docker/login-action@v3
         with:
           registry: ${{ env.REGISTRY }}
@@ -33,24 +63,32 @@ jobs:
         with:
           context: ./backend
           push: true
-          tags: ${{ env.BACKEND_IMAGE }}:latest
+          tags: |
+            ${{ env.BACKEND_IMAGE }}:latest
+            ${{ env.BACKEND_IMAGE }}:${{ github.sha }}
 
       - name: Build & Push Frontend Image
         uses: docker/build-push-action@v5
         with:
           context: ./frontend
           push: true
-          tags: ${{ env.FRONTEND_IMAGE }}:latest
+          tags: |
+            ${{ env.FRONTEND_IMAGE }}:latest
+            ${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
 
       - name: Build & Push Frontend-Admin Image
         uses: docker/build-push-action@v5
         with:
           context: ./frontend-admin
           push: true
-          tags: ${{ env.ADMIN_IMAGE }}:latest
+          tags: |
+            ${{ env.ADMIN_IMAGE }}:latest
+            ${{ env.ADMIN_IMAGE }}:${{ github.sha }}
 
+  # 3. Kích hoạt Triển khai lên EC2 
   deploy-to-ec2:
     needs: build-and-push
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to EC2 via SSH
