@@ -2,9 +2,60 @@ const express = require('express');
 const ExcelJS = require('exceljs');
 const { query, one, pool } = require('../db');
 const { authenticate, requireRole } = require('../middleware/auth');
+const { createQrPng, createLabelsPdf, getEquipmentForQr, getEquipmentRowsByIds } = require('../services/equipment-label.service');
 
 const router = express.Router();
 router.use(authenticate);
+
+
+/** GET /api/equipment/:id/qr-code — trả ảnh PNG QR của một thiết bị. */
+router.get('/:id/qr-code', async (req, res) => {
+  const id = Number(req.params.id);
+  if (!Number.isSafeInteger(id) || id <= 0) return res.status(400).json({ error: 'ID thiết bị không hợp lệ' });
+
+  const equipment = await getEquipmentForQr(id);
+  if (!equipment) return res.status(404).json({ error: 'Không tìm thấy thiết bị' });
+  if (req.user.role === 'DON_VI' && req.user.departmentId && equipment.department_id !== req.user.departmentId) {
+    return res.status(403).json({ error: 'Thiết bị không thuộc đơn vị của bạn' });
+  }
+
+  const png = await createQrPng(equipment);
+  res.setHeader('Content-Type', 'image/png');
+  res.setHeader('Content-Disposition', `inline; filename="qr-${equipment.code.replace(/[^a-zA-Z0-9_-]/g, '_')}.png"`);
+  res.setHeader('Cache-Control', 'private, max-age=300');
+  res.status(200).send(png);
+});
+
+/** POST /api/equipment/export-qr-labels — xuất PDF tem QR dàn trang A4, 30 tem/trang. */
+router.post('/export-qr-labels', requireRole('VAN_PHONG_CUC', 'QMS', 'LANH_DAO_CUC'), async (req, res) => {
+  const { equipment_ids: ids, template_type: templateType = 'DECAL_A4_30' } = req.body || {};
+  if (!Array.isArray(ids) || ids.length === 0) {
+    return res.status(400).json({ error: 'equipment_ids phải là mảng ID không rỗng' });
+  }
+  if (ids.length > 1000) return res.status(400).json({ error: 'Mỗi lần xuất tối đa 1000 thiết bị' });
+  if (!ids.every((id) => Number.isSafeInteger(id) && id > 0)) {
+    return res.status(400).json({ error: 'equipment_ids chỉ được chứa ID số nguyên dương' });
+  }
+  if (new Set(ids).size !== ids.length) {
+    return res.status(400).json({ error: 'equipment_ids không được chứa ID trùng lặp' });
+  }
+  if (typeof templateType !== 'string' || templateType !== 'DECAL_A4_30') {
+    return res.status(400).json({ error: `template_type không được hỗ trợ: ${templateType}` });
+  }
+
+  const equipmentRows = await getEquipmentRowsByIds(ids);
+  const foundIds = new Set(equipmentRows.map((row) => row.id));
+  const missingIds = ids.filter((id) => !foundIds.has(id));
+  if (missingIds.length) {
+    return res.status(404).json({ error: 'Không tìm thấy một hoặc nhiều thiết bị', missing_equipment_ids: missingIds });
+  }
+  const pdf = await createLabelsPdf(equipmentRows, templateType);
+  await req.audit({ action: 'EXPORT_QR_LABELS', entityType: 'equipment', newValues: { equipment_ids: ids, template_type: templateType } });
+  res.setHeader('Content-Type', 'application/pdf');
+  res.setHeader('Content-Disposition', 'attachment; filename="equipment-qr-labels.pdf"');
+  res.setHeader('Content-Length', pdf.length);
+  res.status(200).send(pdf);
+});
 
 /**
  * GET /api/v1/equipment — danh mục trang thiết bị (BM/01)
@@ -46,6 +97,33 @@ router.get('/', async (req, res) => {
   );
   const [{ count }] = await query(`SELECT COUNT(*)::int AS count FROM equipment e WHERE ${where}`, params);
   res.json({ data: rows, total: count, page: parseInt(page, 10) || 1, pageSize: limit });
+});
+
+/** GET /api/v1/equipment/export.xlsx — xuất danh mục (BM/01) ra Excel */
+router.get('/export.xlsx', requireRole('VAN_PHONG_CUC', 'QMS', 'LANH_DAO_CUC'), async (req, res) => {
+  const rows = await query(
+    `SELECT ROW_NUMBER() OVER (ORDER BY e.code) AS stt, e.name, e.code,
+            e.country_of_origin, to_char(e.received_date, 'DD/MM/YYYY') AS received, d.name AS department
+       FROM equipment e LEFT JOIN departments d ON d.id = e.department_id
+      WHERE e.is_active = TRUE`
+  );
+  const wb = new ExcelJS.Workbook();
+  const ws = wb.addWorksheet('Danh muc trang thiet bi');
+  ws.columns = [
+    { header: 'STT', key: 'stt', width: 6 },
+    { header: 'Tên trang thiết bị', key: 'name', width: 38 },
+    { header: 'Mã số', key: 'code', width: 16 },
+    { header: 'Nước sản xuất', key: 'country_of_origin', width: 18 },
+    { header: 'Ngày nhận', key: 'received', width: 14 },
+    { header: 'Đơn vị sử dụng', key: 'department', width: 34 },
+  ];
+  ws.getRow(1).font = { bold: true };
+  rows.forEach((r) => ws.addRow(r));
+
+  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
+  res.setHeader('Content-Disposition', 'attachment; filename="BM-QLD-09-01_01_danh-muc-trang-thiet-bi.xlsx"');
+  await wb.xlsx.write(res);
+  res.end();
 });
 
 /** GET /api/v1/equipment/:id — chi tiết thiết bị + hồ sơ (BM/02) + sự cố gần đây */
@@ -140,33 +218,6 @@ router.post('/:id/logs', requireRole('VAN_PHONG_CUC', 'DON_VI'), async (req, res
   );
   await req.audit({ action: 'CREATE', entityType: 'equipment_log', entityId: created.id, newValues: { content } });
   res.status(201).json({ log: created });
-});
-
-/** GET /api/v1/equipment/export.xlsx — xuất danh mục (BM/01) ra Excel */
-router.get('/export.xlsx', requireRole('VAN_PHONG_CUC', 'QMS', 'LANH_DAO_CUC'), async (req, res) => {
-  const rows = await query(
-    `SELECT ROW_NUMBER() OVER (ORDER BY e.code) AS stt, e.name, e.code,
-            e.country_of_origin, to_char(e.received_date, 'DD/MM/YYYY') AS received, d.name AS department
-       FROM equipment e LEFT JOIN departments d ON d.id = e.department_id
-      WHERE e.is_active = TRUE`
-  );
-  const wb = new ExcelJS.Workbook();
-  const ws = wb.addWorksheet('Danh muc trang thiet bi');
-  ws.columns = [
-    { header: 'STT', key: 'stt', width: 6 },
-    { header: 'Tên trang thiết bị', key: 'name', width: 38 },
-    { header: 'Mã số', key: 'code', width: 16 },
-    { header: 'Nước sản xuất', key: 'country_of_origin', width: 18 },
-    { header: 'Ngày nhận', key: 'received', width: 14 },
-    { header: 'Đơn vị sử dụng', key: 'department', width: 34 },
-  ];
-  ws.getRow(1).font = { bold: true };
-  rows.forEach((r) => ws.addRow(r));
-
-  res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet');
-  res.setHeader('Content-Disposition', 'attachment; filename="BM-QLD-09-01_01_danh-muc-trang-thiet-bi.xlsx"');
-  await wb.xlsx.write(res);
-  res.end();
 });
 
 module.exports = router;

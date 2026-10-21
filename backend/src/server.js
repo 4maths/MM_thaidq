@@ -29,6 +29,7 @@ api.get('/health', async (_req, res) => {
     res.status(500).json({ status: 'error', db: 'disconnected', message: e.message });
   }
 });
+api.use('/public/equipment', require('./routes/public-equipment'));
 api.use('/auth', require('./routes/auth'));
 api.use('/equipment', require('./routes/equipment'));
 api.use('/plans', require('./routes/plans'));
