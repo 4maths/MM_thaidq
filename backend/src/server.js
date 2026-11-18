@@ -30,6 +30,7 @@ api.get('/health', async (_req, res) => {
   }
 });
 api.use('/public/equipment', require('./routes/public-equipment'));
+api.use('/public/incidents', require('./routes/public-incidents'));  // BE-02: báo hỏng qua QR (không cần đăng nhập)
 api.use('/auth', require('./routes/auth'));
 api.use('/equipment', require('./routes/equipment'));
 api.use('/plans', require('./routes/plans'));
@@ -38,9 +39,11 @@ api.use('/repair-plans', require('./routes/repair-plans'));
 api.use('/acceptances', require('./routes/acceptances'));
 api.use('/', require('./routes/admin'));       // /departments, /users, /vendors
 api.use('/reports', require('./routes/reports'));
+api.use('/admin/incidents', require('./routes/admin-incidents')); // BE-03: bảng điều phối công việc
 api.use('/attachments', require('./routes/attachments'));
 api.use('/notifications', require('./routes/notifications'));
 app.use('/api/v1', api);
+app.use('/api', api);
 
 // 404 JSON cho API
 app.use('/api', (_req, res) => res.status(404).json({ error: 'Endpoint không tồn tại' }));

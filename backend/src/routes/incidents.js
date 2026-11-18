@@ -23,12 +23,14 @@ router.get('/', async (req, res) => {
 
   const rows = await query(
     `SELECT i.*, e.code AS equipment_code, e.name AS equipment_name, d.name AS department_name,
-            u.full_name AS reported_by_name, rp.id AS repair_plan_id, rp.status AS repair_plan_status,
+            u.full_name AS reported_by_name, t.full_name AS technician_name,
+            rp.id AS repair_plan_id, rp.status AS repair_plan_status,
             acc.id AS acceptance_id
        FROM incidents i
        JOIN equipment e ON e.id = i.equipment_id
        LEFT JOIN departments d ON d.id = i.department_id
        LEFT JOIN users u ON u.id = i.reported_by
+       LEFT JOIN users t ON t.id = i.technician_id
        LEFT JOIN repair_plans rp ON rp.incident_id = i.id
        LEFT JOIN acceptance_records acc ON acc.incident_id = i.id
       WHERE ${where}
@@ -44,12 +46,14 @@ router.get('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
   const incident = await one(
     `SELECT i.*, e.code AS equipment_code, e.name AS equipment_name, d.name AS department_name,
-            u.full_name AS reported_by_name, rv.full_name AS reviewed_by_name
+            u.full_name AS reported_by_name, rv.full_name AS reviewed_by_name,
+            t.full_name AS technician_name
        FROM incidents i
        JOIN equipment e ON e.id = i.equipment_id
        LEFT JOIN departments d ON d.id = i.department_id
        LEFT JOIN users u ON u.id = i.reported_by
        LEFT JOIN users rv ON rv.id = i.reviewed_by
+       LEFT JOIN users t ON t.id = i.technician_id
       WHERE i.id = $1`,
     [req.params.id]
   );
