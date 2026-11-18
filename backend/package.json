@@ -8,7 +8,11 @@
     "start": "node src/server.js",
     "dev": "node --watch src/server.js",
     "migrate": "node src/db-migrate.js",
-    "seed": "node src/db-seed.js"
+    "seed": "node src/db-seed.js",
+    "lint": "node --check src/server.js src/db.js src/config.js src/routes/*.js src/utils/*.js test/*.js",
+    "test:unit": "node test/unit.test.js",
+    "test:api": "node src/test-local-api.js",
+    "test": "node test/unit.test.js && node src/test-local-api.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

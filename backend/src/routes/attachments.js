@@ -6,10 +6,21 @@ const config = require('../config');
 const { query, one } = require('../db');
 const { authenticate } = require('../middleware/auth');
 
-const uploadDir = path.isAbsolute(config.uploadDir)
-  ? config.uploadDir
-  : path.join(__dirname, '..', '..', config.uploadDir);
-fs.mkdirSync(uploadDir, { recursive: true });
+let uploadDir;
+if (process.platform === 'win32' && config.uploadDir && config.uploadDir.startsWith('/')) {
+  uploadDir = path.join(__dirname, '..', '..', 'uploads');
+} else if (path.isAbsolute(config.uploadDir)) {
+  uploadDir = config.uploadDir;
+} else {
+  uploadDir = path.join(__dirname, '..', '..', config.uploadDir || 'uploads');
+}
+
+try {
+  fs.mkdirSync(uploadDir, { recursive: true });
+} catch (e) {
+  uploadDir = path.join(__dirname, '..', '..', 'uploads');
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 const storage = multer.diskStorage({
   destination: (_req, _file, cb) => cb(null, uploadDir),

@@ -86,7 +86,8 @@ router.get('/', async (req, res) => {
 
   const rows = await query(
     `SELECT e.id, e.code, e.name, e.country_of_origin, e.received_date, e.status,
-            e.category, e.model, e.notes, e.department_id, d.name AS department_name,
+            e.category, e.model, e.notes, e.department_id, e.qr_code_uuid, e.qr_generated_at,
+            d.name AS department_name,
             (SELECT COUNT(*) FROM incidents i WHERE i.equipment_id = e.id AND i.status NOT IN ('DONG')) AS open_incidents
        FROM equipment e
        LEFT JOIN departments d ON d.id = e.department_id
